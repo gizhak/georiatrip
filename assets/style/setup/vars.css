@@ -1,0 +1,115 @@
+/* 🎨 צבעים */
+:root {
+  /* Primary Colors */
+  --clr-primary: #0a2e1e;
+  /* ירוק כהה */
+  --clr-secondary: #e8e5d8;
+  /* בז'/קרם */
+  --clr-accent: #000000;
+  /* שחור */
+
+  /* Text Colors */
+  --clr-text-dark: #000000;
+  --clr-text-light: #e8e5d8;
+  --clr-text-gray: #6b7280;
+
+  /* Background Colors */
+  --clr-bg-light: #ffffff;
+  --clr-bg-dark: #0a2e1e;
+  --clr-bg-cream: #e8e5d8;
+
+  /* Status Colors */
+  --clr-success: #0a2e1e;
+  --clr-danger: #dc2626;
+  --clr-warning: #f59e0b;
+}
+
+/* 🔤 פונטים */
+:root {
+  /* Font Families */
+  --font-heading: 'Space Grotesk', sans-serif;
+  --font-body: 'Work Sans', sans-serif;
+
+  /* Font Sizes */
+  --fs-xs: 0.75rem;
+  /* 12px */
+  --fs-sm: 0.875rem;
+  /* 14px */
+  --fs-base: 1rem;
+  /* 16px */
+  --fs-lg: 1.125rem;
+  /* 18px */
+  --fs-xl: 1.25rem;
+  /* 20px */
+  --fs-2xl: 1.5rem;
+  /* 24px */
+  --fs-3xl: 1.875rem;
+  /* 30px */
+  --fs-4xl: 2.25rem;
+  /* 36px */
+  --fs-5xl: 3rem;
+  /* 48px */
+
+  /* Font Weights */
+  --fw-normal: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+}
+
+/* 📐 Spacing */
+:root {
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 1.5rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 3rem;
+  --spacing-2xl: 4rem;
+}
+
+/* 🎯 Border Radius */
+:root {
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+}
+
+/* 🌑 Shadows */
+:root {
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* 🎨 Global Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--clr-text-dark);
+  line-height: 1.6;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  font-weight: var(--fw-bold);
+  line-height: 1.2;
+}
+
+button {
+  font-family: var(--font-body);
+  cursor: pointer;
+  border: none;
+  background: none;
+}
