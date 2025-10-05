@@ -120,9 +120,9 @@ export function BudgetPage({ setPage, language, setLanguage }) {
             {/* Header */}
             <div className="py-12" style={{ backgroundColor: 'var(--clr-bg-dark)' }}>
                 <div className="max-w-7xl mx-auto px-4 text-white">
-                    <h1 className="text-4xl font-bold mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
+                    <h2 className="text-4xl font-bold mb-2" style={{ fontFamily: 'var(--font-heading)', marginTop: '20px' }}>
                         {t.title}
-                    </h1>
+                    </h2>
                     <p style={{ color: 'var(--clr-text-light)', fontFamily: 'var(--font-body)' }}>
                         {t.subtitle}
                     </p>

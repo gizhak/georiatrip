@@ -2,9 +2,9 @@
 export function HomePage({ setPage, language, setLanguage }) {
     const translations = {
         en: {
-            homeNav: '🏠 Home',
-            budgetNav: '💰 Budget',
-            galleryNav: '📸 Gallery',
+            homeNav: ' Home',
+            budgetNav: ' Budget',
+            galleryNav: ' Gallery',
             signIn: 'Sign In',
             title: 'Track your adventure expenses with friends',
             subtitle: 'Manage your group budget, split expenses fairly, and keep memories alive with our comprehensive trip tracking platform designed for your Georgia adventure.',
@@ -24,9 +24,9 @@ export function HomePage({ setPage, language, setLanguage }) {
             footerCopyright: '© 2024 Georgia Trip Tracker. Built for amazing adventures.'
         },
         he: {
-            homeNav: '🏠 בית',
-            budgetNav: '💰 תקציב',
-            galleryNav: '📸 גלריה',
+            homeNav: ' בית',
+            budgetNav: ' תקציב',
+            galleryNav: ' גלריה',
             signIn: 'התחבר',
             title: 'עקוב אחרי הוצאות ההרפתקה שלך עם חברים',
             subtitle: 'נהל את תקציב הקבוצה, חלק הוצאות בצורה הוגנת, ושמור זיכרונות חיים עם פלטפורמת מעקב הטיולים המקיפה שלנו המיועדת להרפתקה שלך בגאורגיה.',

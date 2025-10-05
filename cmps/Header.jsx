@@ -21,19 +21,19 @@ export function Header({ currentPage, setPage, language, setLanguage }) {
                         onClick={() => setPage('home')}
                         className={currentPage === 'home' ? 'font-bold' : 'hover:text-gray-300'}
                     >
-                        {language === 'en' ? '🏠 Home' : '🏠 בית'}
+                        {language === 'en' ? ' Home' : ' בית'}
                     </button>
                     <button
                         onClick={() => setPage('budget')}
                         className={currentPage === 'budget' ? 'font-bold' : 'hover:text-gray-300'}
                     >
-                        {language === 'en' ? '💰 Budget' : '💰 תקציב'}
+                        {language === 'en' ? ' Budget' : ' תקציב'}
                     </button>
                     <button
                         onClick={() => setPage('gallery')}
                         className={currentPage === 'gallery' ? 'font-bold' : 'hover:text-gray-300'}
                     >
-                        {language === 'en' ? '📸 Gallery' : '📸 גלריה'}
+                        {language === 'en' ? ' Gallery' : ' גלריה'}
                     </button>
                 </nav>
 
