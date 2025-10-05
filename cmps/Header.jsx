@@ -1,7 +1,7 @@
 export function Header({ currentPage, setPage, language, setLanguage }) {
     return (
-        <header className="bg-transparent sticky top-0 left-0 right-0 z-50 transition-all">
-            <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between backdrop-blur-md bg-opacity-90"
+        <header className="sticky top-0 left-0 right-0 z-50 transition-all">
+            <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between backdrop-blur-md bg-opacity-95"
                 style={{ backgroundColor: 'var(--clr-bg-dark)' }}>
                 {/* לוגו */}
                 <div className="flex items-center gap-2">
@@ -22,19 +22,19 @@ export function Header({ currentPage, setPage, language, setLanguage }) {
                         onClick={() => setPage('home')}
                         className={currentPage === 'home' ? 'font-bold' : 'hover:text-gray-300'}
                     >
-                        {language === 'en' ? '🏠 Home' : '🏠 בית'}
+                        {language === 'en' ? ' Home' : ' בית'}
                     </button>
                     <button
                         onClick={() => setPage('budget')}
                         className={currentPage === 'budget' ? 'font-bold' : 'hover:text-gray-300'}
                     >
-                        {language === 'en' ? '💰 Budget' : '💰 תקציב'}
+                        {language === 'en' ? ' Budget' : ' תקציב'}
                     </button>
                     <button
                         onClick={() => setPage('gallery')}
                         className={currentPage === 'gallery' ? 'font-bold' : 'hover:text-gray-300'}
                     >
-                        {language === 'en' ? '📸 Gallery' : '📸 גלריה'}
+                        {language === 'en' ? ' Gallery' : ' גלריה'}
                     </button>
                 </nav>
 
@@ -52,14 +52,16 @@ export function Header({ currentPage, setPage, language, setLanguage }) {
                         {language === 'en' ? 'HE' : 'EN'}
                     </button>
                     <button
-                        className="px-6 py-2 rounded"
+                        onClick={() => setPage('profile')}
+                        className="flex items-center gap-2 px-4 py-2 rounded hover:opacity-80 transition"
                         style={{
                             backgroundColor: 'var(--clr-secondary)',
                             color: 'var(--clr-primary)',
                             fontFamily: 'var(--font-body)'
                         }}
                     >
-                        {language === 'en' ? 'Guy Izhak' : 'גיא יצחק'}
+                        <span>👤</span>
+                        <span>{language === 'en' ? 'Guy Izhak' : 'גיא יצחק'}</span>
                     </button>
                 </div>
             </div>
