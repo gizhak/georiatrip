@@ -1,7 +1,8 @@
 export function Header({ currentPage, setPage, language, setLanguage }) {
     return (
-        <header className="bg-transparent absolute top-0 left-0 right-0 z-10">
-            <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+        <header className="bg-transparent sticky top-0 left-0 right-0 z-50 transition-all">
+            <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between backdrop-blur-md bg-opacity-90"
+                style={{ backgroundColor: 'var(--clr-bg-dark)' }}>
                 {/* לוגו */}
                 <div className="flex items-center gap-2">
                     <div
@@ -21,19 +22,19 @@ export function Header({ currentPage, setPage, language, setLanguage }) {
                         onClick={() => setPage('home')}
                         className={currentPage === 'home' ? 'font-bold' : 'hover:text-gray-300'}
                     >
-                        {language === 'en' ? ' Home' : ' בית'}
+                        {language === 'en' ? '🏠 Home' : '🏠 בית'}
                     </button>
                     <button
                         onClick={() => setPage('budget')}
                         className={currentPage === 'budget' ? 'font-bold' : 'hover:text-gray-300'}
                     >
-                        {language === 'en' ? ' Budget' : ' תקציב'}
+                        {language === 'en' ? '💰 Budget' : '💰 תקציב'}
                     </button>
                     <button
                         onClick={() => setPage('gallery')}
                         className={currentPage === 'gallery' ? 'font-bold' : 'hover:text-gray-300'}
                     >
-                        {language === 'en' ? ' Gallery' : ' גלריה'}
+                        {language === 'en' ? '📸 Gallery' : '📸 גלריה'}
                     </button>
                 </nav>
 

@@ -118,9 +118,9 @@ export function BudgetPage({ setPage, language, setLanguage }) {
     return (
         <div className="min-h-screen" style={{ backgroundColor: 'var(--clr-bg-cream)' }} dir={isRTL ? 'rtl' : 'ltr'}>
             {/* Header */}
-            <div className="py-12" style={{ backgroundColor: 'var(--clr-bg-dark)' }}>
+            <div className="py-12" style={{ backgroundColor: 'var(--clr-bg-dark)', paddingTop: '1rem' }}>
                 <div className="max-w-7xl mx-auto px-4 text-white">
-                    <h2 className="text-4xl font-bold mb-2" style={{ fontFamily: 'var(--font-heading)', marginTop: '20px' }}>
+                    <h2 className="text-4xl font-bold mb-2" style={{ fontFamily: 'var(--font-heading)', marginBottom: '20px' }}>
                         {t.title}
                     </h2>
                     <p style={{ color: 'var(--clr-text-light)', fontFamily: 'var(--font-body)' }}>
@@ -384,7 +384,7 @@ export function BudgetPage({ setPage, language, setLanguage }) {
                         </div>
                     </div>
                     <div className="mt-6 pt-6 border-t text-center text-sm text-gray-600" style={{ borderColor: 'var(--clr-primary)' }}>
-                        {language === 'he' ? '© 2024 מעקב טיול גאורגיה. נבנה להרפתקאות מדהימות.' : '© 2024 Georgia Trip Tracker. Built for amazing adventures.'}
+                        {language === 'he' ? '© 2025 מעקב טיול גאורגיה. נבנה להרפתקאות מדהימות.' : '© 2025 Georgia Trip Tracker. Built for amazing adventures.'}
                     </div>
                 </div>
             </footer>

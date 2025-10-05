@@ -21,7 +21,7 @@ export function HomePage({ setPage, language, setLanguage }) {
             photoDesc: 'Upload and share trip memories with your group. Access photos anytime, even without logging in.',
             footerTitle: 'Georgia Trip Tracker',
             footerDesc: 'Making group travel expenses simple and memories lasting.',
-            footerCopyright: '© 2024 Georgia Trip Tracker. Built for amazing adventures.'
+            footerCopyright: '© 2025 Georgia Trip Tracker. Built for amazing adventures.'
         },
         he: {
             homeNav: ' בית',
@@ -43,7 +43,7 @@ export function HomePage({ setPage, language, setLanguage }) {
             photoDesc: 'העלה ושתף זיכרונות טיול עם הקבוצה שלך. גישה לתמונות בכל עת, אפילו בלי להתחבר.',
             footerTitle: 'מעקב טיול גאורגיה',
             footerDesc: 'הופכים הוצאות טיולים קבוצתיים לפשוטות וזיכרונות לנצחיים.',
-            footerCopyright: '© 2024 מעקב טיול גאורגיה. נבנה להרפתקאות מדהימות.'
+            footerCopyright: '© 2025 מעקב טיול גאורגיה. נבנה להרפתקאות מדהימות.'
         }
     }
 
