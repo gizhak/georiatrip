@@ -7,18 +7,21 @@ export function ExpenseForm({
     categories,
     currency,
     t,
-    onSave,
+    onChange,    // זה לעדכון השדות
+    onSave,      // זה לשמירה סופית
     onCancel
 }) {
     const getCurrencySymbol = expenseService.getCurrencySymbol
     const isEditing = !!expense.id
 
-    const handleToggleSplit = (person) => {
-        const newSplitWith = expense.splitWith.includes(person)
-            ? expense.splitWith.filter(p => p !== person)
-            : [...expense.splitWith, person]
+    const splitWith = expense.splitWith || []
 
-        onSave({ ...expense, splitWith: newSplitWith })
+    const handleToggleSplit = (person) => {
+        const newSplitWith = splitWith.includes(person)
+            ? splitWith.filter(p => p !== person)
+            : [...splitWith, person]
+
+        onChange({ ...expense, splitWith: newSplitWith })
     }
 
     return (
@@ -37,7 +40,7 @@ export function ExpenseForm({
                         type="text"
                         placeholder={t.dinnerPlaceholder}
                         value={expense.description}
-                        onChange={(e) => onSave({ ...expense, description: e.target.value })}
+                        onChange={(e) => onChange({ ...expense, description: e.target.value })}  // ✅ onChange!
                         className="w-full px-4 py-2 border rounded"
                     />
                 </div>
@@ -51,7 +54,7 @@ export function ExpenseForm({
                         type="number"
                         placeholder="50.00"
                         value={expense.amount}
-                        onChange={(e) => onSave({ ...expense, amount: e.target.value })}
+                        onChange={(e) => onChange({ ...expense, amount: e.target.value })}  // ✅ onChange!
                         className="w-full px-4 py-2 border rounded"
                     />
                 </div>
@@ -64,7 +67,7 @@ export function ExpenseForm({
                     <input
                         type="date"
                         value={expense.date}
-                        onChange={(e) => onSave({ ...expense, date: e.target.value })}
+                        onChange={(e) => onChange({ ...expense, date: e.target.value })}  // ✅ onChange!
                         className="w-full px-4 py-2 border rounded"
                     />
                 </div>
@@ -76,7 +79,7 @@ export function ExpenseForm({
                     </label>
                     <select
                         value={expense.paidBy}
-                        onChange={(e) => onSave({ ...expense, paidBy: e.target.value })}
+                        onChange={(e) => onChange({ ...expense, paidBy: e.target.value })}  // ✅ onChange!
                         className="w-full px-4 py-2 border rounded"
                     >
                         <option value="">{t.selectWhoPaid}</option>
@@ -91,7 +94,7 @@ export function ExpenseForm({
                     </label>
                     <select
                         value={expense.category}
-                        onChange={(e) => onSave({ ...expense, category: e.target.value })}
+                        onChange={(e) => onChange({ ...expense, category: e.target.value })}  // ✅ onChange!
                         className="w-full px-4 py-2 border rounded"
                     >
                         {categories.map(c => (
@@ -113,28 +116,28 @@ export function ExpenseForm({
                             onClick={() => handleToggleSplit(person)}
                             className="px-4 py-2 rounded transition"
                             style={{
-                                backgroundColor: expense.splitWith.includes(person) ? 'var(--clr-secondary)' : '#f3f4f6',
-                                color: expense.splitWith.includes(person) ? 'var(--clr-primary)' : '#6b7280',
-                                fontWeight: expense.splitWith.includes(person) ? 'bold' : 'normal'
+                                backgroundColor: splitWith.includes(person) ? 'var(--clr-secondary)' : '#f3f4f6',
+                                color: splitWith.includes(person) ? 'var(--clr-primary)' : '#6b7280',
+                                fontWeight: splitWith.includes(person) ? 'bold' : 'normal'
                             }}
                         >
-                            {person} {expense.splitWith.includes(person) && '✓'}
+                            {person} {splitWith.includes(person) && '✓'}
                         </button>
                     ))}
                 </div>
 
                 {/* תצוגת חלוקה */}
-                {expense.splitWith.length > 0 && expense.amount && (
+                {splitWith.length > 0 && expense.amount && (
                     <div className="mt-4 p-4 rounded-lg border" style={{ backgroundColor: '#eff6ff', borderColor: '#3b82f6' }}>
                         <p className="text-sm font-semibold mb-3" style={{ color: 'var(--clr-primary)' }}>
                             {t.equalSplit}
                         </p>
                         <div className="space-y-2">
-                            {expense.splitWith.map(person => (
+                            {splitWith.map(person => (
                                 <div key={person} className="flex justify-between items-center text-sm">
                                     <span className="font-medium">{person}</span>
                                     <span className="font-bold" style={{ color: 'var(--clr-primary)' }}>
-                                        {getCurrencySymbol(currency)}{(parseFloat(expense.amount || 0) / expense.splitWith.length).toFixed(2)}
+                                        {getCurrencySymbol(currency)}{(parseFloat(expense.amount || 0) / splitWith.length).toFixed(2)}
                                     </span>
                                 </div>
                             ))}
@@ -169,7 +172,7 @@ export function ExpenseForm({
                     <input
                         type="checkbox"
                         checked={expense.paidWithCard}
-                        onChange={(e) => onSave({ ...expense, paidWithCard: e.target.checked })}
+                        onChange={(e) => onChange({ ...expense, paidWithCard: e.target.checked })}  // ✅ onChange!
                     />
                     {t.paidWithCard}
                 </label>
@@ -178,7 +181,7 @@ export function ExpenseForm({
             {/* כפתורים */}
             <div className="mt-6 flex gap-4">
                 <button
-                    onClick={onSave}
+                    onClick={onSave}  // ✅ רק כאן onSave!
                     className="px-6 py-3 rounded-lg"
                     style={{ backgroundColor: 'var(--clr-primary)', color: 'white' }}
                 >

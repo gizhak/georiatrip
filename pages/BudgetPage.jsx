@@ -253,7 +253,8 @@ export function BudgetPage({ setPage, language, setLanguage }) {
                         categories={categories}
                         currency={currency}
                         t={t}
-                        onSave={(updated) => setNewExpense(updated)}
+                        onSave={handleSaveExpense}  // ✅ שנה כאן - קרא לפונקציה שבאמת שומרת!
+                        onChange={(updated) => setNewExpense(updated)}  // ✅ הוסף prop חדש לעדכון
                         onCancel={resetExpenseForm}
                     />
                 )}

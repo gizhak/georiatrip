@@ -1,5 +1,12 @@
 // 📄 דף הבית
+const { useState } = React
+import { SignInModal } from '../cmps/SignInModal.jsx'
+
 export function HomePage({ setPage, language, setLanguage }) {
+    const [showSignIn, setShowSignIn] = useState(false)
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
+    const [userName, setUserName] = useState('')
+
     const translations = {
         en: {
             homeNav: ' Home',
@@ -48,6 +55,12 @@ export function HomePage({ setPage, language, setLanguage }) {
     }
 
     const t = translations[language]
+
+    const handleSignIn = (name) => {
+        setUserName(name)
+        setIsLoggedIn(true)
+        setPage('budget')
+    }
 
     return (
         <div className="min-h-screen" style={{ backgroundColor: 'var(--clr-bg-dark)' }}>
@@ -265,6 +278,13 @@ export function HomePage({ setPage, language, setLanguage }) {
                     </div>
                 </div>
             </div>
+
+            <SignInModal
+                isOpen={showSignIn}
+                onClose={() => setShowSignIn(false)}
+                language={language}
+                onSignIn={handleSignIn}
+            />
 
             {/* Footer תחתון */}
             <footer className="py-8" style={{ backgroundColor: 'var(--clr-bg-cream)' }}>
