@@ -2,12 +2,11 @@ const { useState, useEffect } = React
 import { utilService } from '../services/util.service.js'
 import { CurrencyChangeModal } from '../cmps/CurrencyChangeModal.jsx'
 
-export function ProfilePage({ setPage, language, setLanguage }) {
+export function ProfilePage({ setPage, language, setLanguage, user, setUser }) {
     const [selectedCurrency, setSelectedCurrency] = useState('GEL')
     const [showCurrencyModal, setShowCurrencyModal] = useState(false)
     const [pendingCurrency, setPendingCurrency] = useState(null)
 
-    // טען את המטבע מ-localStorage
     useEffect(() => {
         const savedCurrency = utilService.loadFromStorage('userCurrency')
         if (savedCurrency) setSelectedCurrency(savedCurrency)
@@ -93,11 +92,9 @@ export function ProfilePage({ setPage, language, setLanguage }) {
     ]
 
     const handleSaveCurrency = () => {
-        // בדוק אם יש expenses קיימים
         const existingExpenses = utilService.loadFromStorage('expenses')
         const existingBudget = utilService.loadFromStorage('budget')
 
-        // אם יש נתונים והמטבע שונה
         if ((existingExpenses && existingExpenses.length > 0) || existingBudget > 0) {
             const currentCurrency = utilService.loadFromStorage('userCurrency') || 'GEL'
             if (currentCurrency !== selectedCurrency) {
@@ -107,7 +104,6 @@ export function ProfilePage({ setPage, language, setLanguage }) {
             }
         }
 
-        // אם אין נתונים או המטבע זהה - פשוט שמור
         utilService.saveToStorage('userCurrency', selectedCurrency)
         alert(t.currencySaved)
     }
@@ -115,15 +111,14 @@ export function ProfilePage({ setPage, language, setLanguage }) {
     const handleCurrencyChange = (action) => {
         const exchangeRates = {
             'GEL': 1,
-            'USD': 2.7,    // 1 USD = 2.7 GEL
-            'EUR': 3.2,    // 1 EUR = 3.2 GEL
-            'ILS': 0.73    // 1 ILS = 0.73 GEL
+            'USD': 2.7,
+            'EUR': 3.2,
+            'ILS': 0.73
         }
 
         const currentCurrency = utilService.loadFromStorage('userCurrency') || 'GEL'
 
         if (action === 'convert') {
-            // המר את כל ההוצאות
             const expenses = utilService.loadFromStorage('expenses') || []
             const budget = utilService.loadFromStorage('budget') || 0
 
@@ -142,7 +137,6 @@ export function ProfilePage({ setPage, language, setLanguage }) {
 
             alert(`${t.currencySaved}\n${expenses.length} expenses converted!`)
         } else if (action === 'reset') {
-            // אפס הכל
             utilService.saveToStorage('expenses', [])
             utilService.saveToStorage('budget', 0)
             utilService.saveToStorage('userCurrency', pendingCurrency)
@@ -154,9 +148,14 @@ export function ProfilePage({ setPage, language, setLanguage }) {
         setPendingCurrency(null)
     }
 
+    // ✅ פונקציה לטיפול ב-Sign Out
+    const handleSignOut = () => {
+        setUser(null)  // מאפס את המשתמש
+        setPage('home')  // חוזר לדף הבית
+    }
+
     return (
         <div className="min-h-screen" style={{ backgroundColor: 'var(--clr-bg-cream)' }} dir={isRTL ? 'rtl' : 'ltr'}>
-            {/* Header */}
             <div className="py-12" style={{ backgroundColor: 'var(--clr-bg-dark)', paddingTop: '5px' }}>
                 <div className="max-w-7xl mx-auto px-4 text-white">
                     <h1 className="text-4xl font-bold mb-2" style={{ fontFamily: 'var(--font-heading)', marginBottom: '20px' }}>
@@ -169,7 +168,6 @@ export function ProfilePage({ setPage, language, setLanguage }) {
             </div>
 
             <div className="max-w-7xl mx-auto px-4 py-8">
-                {/* Profile Information */}
                 <div className="bg-white p-6 rounded-lg shadow mb-8">
                     <h3 className="text-xl font-bold mb-6 flex items-center gap-2" style={{ fontFamily: 'var(--font-heading)' }}>
                         <span>👤</span> {t.profileInfo}
@@ -209,7 +207,6 @@ export function ProfilePage({ setPage, language, setLanguage }) {
                     </div>
                 </div>
 
-                {/* Quick Actions */}
                 <div className="bg-white p-6 rounded-lg shadow mb-8">
                     <h3 className="text-xl font-bold mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
                         {t.quickActions}
@@ -244,13 +241,11 @@ export function ProfilePage({ setPage, language, setLanguage }) {
                     </div>
                 </div>
 
-                {/* Account Settings */}
                 <div className="bg-white p-6 rounded-lg shadow mb-8">
                     <h3 className="text-xl font-bold mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
                         {t.accountSettings}
                     </h3>
 
-                    {/* Currency Preference */}
                     <div className="mb-6 p-4 rounded-lg" style={{ backgroundColor: '#f0fdf4', border: '2px solid var(--clr-primary)' }}>
                         <div className="flex items-start gap-3 mb-4">
                             <span className="text-3xl">💱</span>
@@ -295,7 +290,7 @@ export function ProfilePage({ setPage, language, setLanguage }) {
                         <h4 className="font-bold text-red-600 mb-2">{t.signOut}</h4>
                         <p className="text-sm text-gray-600 mb-4">{t.signOutDesc}</p>
                         <button
-                            onClick={() => setPage('home')}
+                            onClick={handleSignOut}
                             className="flex items-center gap-2 px-6 py-2 border-2 border-red-600 text-red-600 rounded hover:bg-red-50 transition"
                         >
                             <span>↪</span>
@@ -305,7 +300,6 @@ export function ProfilePage({ setPage, language, setLanguage }) {
                 </div>
             </div>
 
-            {/* Currency Change Modal */}
             <CurrencyChangeModal
                 isOpen={showCurrencyModal}
                 onClose={() => {
@@ -318,7 +312,6 @@ export function ProfilePage({ setPage, language, setLanguage }) {
                 language={language}
             />
 
-            {/* Footer */}
             <footer className="py-8 mt-8" style={{ backgroundColor: 'var(--clr-bg-cream)' }}>
                 <div className="max-w-6xl mx-auto px-4">
                     <div className="flex flex-col md:flex-row justify-between items-center">
