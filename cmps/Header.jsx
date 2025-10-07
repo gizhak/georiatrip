@@ -13,7 +13,7 @@ export function Header({ currentPage, setPage, language, setLanguage, user, setU
         <div>
             <header className="sticky top-0 left-0 right-0 z-50 transition-all">
                 <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between backdrop-blur-md bg-opacity-95"
-                    style={{ backgroundColor: 'var(--clr-bg-dark)' }}>
+                    style={{ backgroundColor: 'var(--clr-bg-dark)', maxWidth: '150rem', rem: '10px' }}>
                     {/* לוגו */}
                     <div className="flex items-center gap-2">
                         <div

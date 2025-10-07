@@ -27,7 +27,7 @@ const translations = {
             photoDesc: 'Upload and share trip memories with your group. Access photos anytime, even without logging in.',
             footerTitle: 'Georgia Trip Tracker',
             footerDesc: 'Making group travel expenses simple and memories lasting.',
-            footerCopyright: '© 2024 Georgia Trip Tracker. Built for amazing adventures.'
+            footerCopyright: '© 2025 Georgia Trip Tracker. Built for amazing adventures.'
         },
         he: {
             homeNav: '🏠 בית',
@@ -49,7 +49,7 @@ const translations = {
             photoDesc: 'העלה ושתף זיכרונות טיול עם הקבוצה שלך. גישה לתמונות בכל עת, אפילו בלי להתחבר.',
             footerTitle: 'מעקב טיול גאורגיה',
             footerDesc: 'הופכים הוצאות טיולים קבוצתיים לפשוטות וזיכרונות לנצחיים.',
-            footerCopyright: '© 2024 מעקב טיול גאורגיה. נבנה להרפתקאות מדהימות.'
+            footerCopyright: '© 2025 מעקב טיול גאורגיה. נבנה להרפתקאות מדהימות.'
         }
     },
 
@@ -67,7 +67,7 @@ const translations = {
             home: 'Home',
             gallery: 'Gallery',
             budget: 'Budget',
-            copyright: '© 2024 Georgia Trip Tracker. Built for amazing adventures.'
+            copyright: '© 2025 Georgia Trip Tracker. Built for amazing adventures.'
         },
         he: {
             title: 'גלריית הטיול',
@@ -81,7 +81,7 @@ const translations = {
             home: 'בית',
             gallery: 'גלריה',
             budget: 'תקציב',
-            copyright: '© 2024 מעקב טיול גאורגיה. נבנה להרפתקאות מדהימות.'
+            copyright: '© 2025 מעקב טיול גאורגיה. נבנה להרפתקאות מדהימות.'
         }
     },
 
@@ -89,7 +89,7 @@ const translations = {
     budget: {
         en: {
             title: 'Trip Budget Tracker',
-            subtitle: 'Georgia Adventure 2024',
+            subtitle: 'Georgia Adventure 2025',
             exchange: 'Exchange: 1 EUR = 3.2 GEL | 1 USD = 2.7 GEL | 1 ILS = 0.73 GEL',
             cashBudget: 'Cash Budget',
             cashSpentMy: 'Cash Spent (My)',
@@ -150,7 +150,7 @@ const translations = {
         },
         he: {
             title: 'מעקב תקציב טיול',
-            subtitle: 'הרפתקה בגאורגיה 2024',
+            subtitle: 'הרפתקה בגאורגיה 2025',
             exchange: 'שער חליפין: 1 EUR = 3.2 GEL | 1 USD = 2.7 GEL | 1 ILS = 0.73 GEL',
             cashBudget: 'תקציב מזומן',
             cashSpentMy: 'הוצאתי במזומן',
