@@ -11,6 +11,7 @@ import { ProfilePage } from './pages/ProfilePage.jsx'
 export function App() {
     const [page, setPage] = useState('home')
     const [language, setLanguage] = useState('en')
+    const [user, setUser] = useState(null)
 
     return (
         <div className="app">
@@ -21,6 +22,8 @@ export function App() {
                     setPage={setPage}
                     language={language}
                     setLanguage={setLanguage}
+                    user={user}
+                    setUser={setUser}
                 />
             )}
 
@@ -31,6 +34,8 @@ export function App() {
                         setPage={setPage}
                         language={language}
                         setLanguage={setLanguage}
+                        user={user}
+                        setUser={setUser}
                     />
                 )}
                 {page === 'budget' && (
@@ -38,6 +43,8 @@ export function App() {
                         setPage={setPage}
                         language={language}
                         setLanguage={setLanguage}
+                        user={user}
+                        setUser={setUser}
                     />
                 )}
                 {page === 'gallery' && (
@@ -45,6 +52,7 @@ export function App() {
                         setPage={setPage}
                         language={language}
                         setLanguage={setLanguage}
+                        user={user}
                     />
                 )}
                 {page === 'profile' && (
@@ -52,6 +60,8 @@ export function App() {
                         setPage={setPage}
                         language={language}
                         setLanguage={setLanguage}
+                        user={user}
+                        setUser={setUser}
                     />
                 )}
             </main>

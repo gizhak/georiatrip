@@ -1,23 +1,33 @@
-const { useState } = React
+const { useState, useEffect } = React
 
 // ייבוא שירותים וקומפוננטות
 import { translationService } from '../services/translation.service.js'
 import { expenseService } from '../services/expense.service.js'
+import { utilService } from '../services/util.service.js'
 import { BudgetStats } from '../cmps/budget/BudgetStats.jsx'
 import { ExpenseChart } from '../cmps/budget/ExpenseChart.jsx'
 import { ExpenseForm } from '../cmps/budget/ExpenseForm.jsx'
 import { ExpenseList } from '../cmps/budget/ExpenseList.jsx'
 
-export function BudgetPage({ setPage, language, setLanguage }) {
+export function BudgetPage({ setPage, language, setLanguage, user, setUser }) {
     // State management
     const [showAddExpense, setShowAddExpense] = useState(false)
     const [showEditBudget, setShowEditBudget] = useState(false)
     const [showManageParticipants, setShowManageParticipants] = useState(false)
     const [editingExpense, setEditingExpense] = useState(null)
 
-    const [budget, setBudget] = useState(0)
-    const [currency, setCurrency] = useState('GEL')
-    const [expenses, setExpenses] = useState([])
+    const [budget, setBudget] = useState(() => {
+        return utilService.loadFromStorage('budget') || 0
+    })
+
+    const [currency, setCurrency] = useState(() => {
+        return utilService.loadFromStorage('userCurrency') || 'GEL'
+    })
+
+    const [expenses, setExpenses] = useState(() => {
+        return utilService.loadFromStorage('expenses') || []
+    })
+
     const [participants, setParticipants] = useState(['Guy Izhak', 'Alice', 'Bob', 'Charlie', 'Dana'])
     const [newParticipant, setNewParticipant] = useState('')
 
@@ -30,6 +40,23 @@ export function BudgetPage({ setPage, language, setLanguage }) {
         paidWithCard: false,
         date: new Date().toISOString().split('T')[0]
     })
+
+    // שמור אוטומטית כל שינוי ב-localStorage
+    useEffect(() => {
+        utilService.saveToStorage('expenses', expenses)
+    }, [expenses])
+
+    useEffect(() => {
+        utilService.saveToStorage('budget', budget)
+    }, [budget])
+
+    // עדכן מטבע אם השתנה בפרופיל
+    useEffect(() => {
+        const savedCurrency = utilService.loadFromStorage('userCurrency')
+        if (savedCurrency && savedCurrency !== currency) {
+            setCurrency(savedCurrency)
+        }
+    }, [])
 
     // תרגומים
     const t = translationService.getTranslations('budget', language)
@@ -120,15 +147,44 @@ export function BudgetPage({ setPage, language, setLanguage }) {
             {/* Header */}
             <div className="py-12" style={{ backgroundColor: 'var(--clr-bg-dark)', paddingTop: '1rem' }}>
                 <div className="max-w-7xl mx-auto px-4 text-white">
-                    <h2 className="text-4xl font-bold mb-2" style={{ fontFamily: 'var(--font-heading)', marginBottom: '20px' }}>
-                        {t.title}
-                    </h2>
-                    <p style={{ color: 'var(--clr-text-light)', fontFamily: 'var(--font-body)' }}>
-                        {t.subtitle}
-                    </p>
-                    <p className="text-sm mt-2" style={{ color: 'var(--clr-text-light)', fontFamily: 'var(--font-body)' }}>
-                        {t.exchange}
-                    </p>
+                    <div className="flex justify-between items-start">
+                        <div>
+                            <h2 className="text-4xl font-bold mb-2" style={{ fontFamily: 'var(--font-heading)', marginBottom: '20px' }}>
+                                {t.title}
+                            </h2>
+                            <p style={{ color: 'var(--clr-text-light)', fontFamily: 'var(--font-body)' }}>
+                                {t.subtitle}
+                            </p>
+                            <p className="text-sm mt-2" style={{ color: 'var(--clr-text-light)', fontFamily: 'var(--font-body)' }}>
+                                {t.exchange}
+                            </p>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <button
+                                onClick={() => setLanguage(language === 'en' ? 'he' : 'en')}
+                                className="px-4 py-2 text-sm border rounded"
+                                style={{
+                                    borderColor: 'var(--clr-secondary)',
+                                    color: 'var(--clr-secondary)'
+                                }}
+                            >
+                                {language === 'en' ? 'עב' : 'EN'}
+                            </button>
+                            {user && (
+                                <button
+                                    onClick={() => setPage('profile')}
+                                    className="flex items-center gap-2 px-4 py-2 rounded"
+                                    style={{
+                                        backgroundColor: 'var(--clr-secondary)',
+                                        color: 'var(--clr-primary)'
+                                    }}
+                                >
+                                    <span>👤</span>
+                                    <span>{user.name}</span>
+                                </button>
+                            )}
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -253,8 +309,8 @@ export function BudgetPage({ setPage, language, setLanguage }) {
                         categories={categories}
                         currency={currency}
                         t={t}
-                        onSave={handleSaveExpense}  // ✅ שנה כאן - קרא לפונקציה שבאמת שומרת!
-                        onChange={(updated) => setNewExpense(updated)}  // ✅ הוסף prop חדש לעדכון
+                        onSave={handleSaveExpense}
+                        onChange={(updated) => setNewExpense(updated)}
                         onCancel={resetExpenseForm}
                     />
                 )}

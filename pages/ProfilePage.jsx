@@ -1,5 +1,18 @@
-// 👤 דף פרופיל
+const { useState, useEffect } = React
+import { utilService } from '../services/util.service.js'
+import { CurrencyChangeModal } from '../cmps/CurrencyChangeModal.jsx'
+
 export function ProfilePage({ setPage, language, setLanguage }) {
+    const [selectedCurrency, setSelectedCurrency] = useState('GEL')
+    const [showCurrencyModal, setShowCurrencyModal] = useState(false)
+    const [pendingCurrency, setPendingCurrency] = useState(null)
+
+    // טען את המטבע מ-localStorage
+    useEffect(() => {
+        const savedCurrency = utilService.loadFromStorage('userCurrency')
+        if (savedCurrency) setSelectedCurrency(savedCurrency)
+    }, [])
+
     const translations = {
         en: {
             title: 'Profile',
@@ -19,6 +32,11 @@ export function ProfilePage({ setPage, language, setLanguage }) {
             accountSettings: 'Account Settings',
             tripPreferences: 'Trip Preferences',
             tripPreferencesDesc: 'Your account is set up for the Georgia Adventure 2024 trip. All your expenses and photos are automatically associated with this trip.',
+            currencyPreference: 'Currency Preference',
+            currencyPreferenceDesc: 'Choose your preferred currency for the budget tracker. This will update all financial displays.',
+            selectCurrency: 'Select Currency',
+            saveCurrency: 'Save Currency',
+            currencySaved: 'Currency preference saved successfully!',
             signOut: 'Sign Out',
             signOutDesc: 'Sign out of your account. You can always sign back in to access your trip data.',
             signOutButton: 'Sign Out',
@@ -46,7 +64,12 @@ export function ProfilePage({ setPage, language, setLanguage }) {
             tripGalleryDesc: 'צפה והעלה תמונות',
             accountSettings: 'הגדרות חשבון',
             tripPreferences: 'העדפות טיול',
-            tripPreferencesDesc: 'החשבון שלך מוגדר לטיול הרפתקת גאורגיה 2024. כל ההוצאות והתמונות שלך משוייכים אוטומטית לטיול זה.',
+            tripPreferencesDesc: 'החשבון שלך מוגדר לטיול הרפתקת גאורגיה 2024. כל ההוצאות והתמונות שלך משויכים אוטומטית לטיול זה.',
+            currencyPreference: 'העדפת מטבע',
+            currencyPreferenceDesc: 'בחר את המטבע המועדף עליך למעקב התקציב. זה יעדכן את כל התצוגות הכספיות.',
+            selectCurrency: 'בחר מטבע',
+            saveCurrency: 'שמור מטבע',
+            currencySaved: 'העדפת המטבע נשמרה בהצלחה!',
             signOut: 'התנתק',
             signOutDesc: 'התנתק מהחשבון שלך. אתה תמיד יכול להתחבר בחזרה כדי לגשת לנתוני הטיול שלך.',
             signOutButton: 'התנתק',
@@ -61,6 +84,75 @@ export function ProfilePage({ setPage, language, setLanguage }) {
 
     const t = translations[language]
     const isRTL = language === 'he'
+
+    const currencies = [
+        { code: 'GEL', name: 'GEL (Georgian Lari)', symbol: '₾' },
+        { code: 'USD', name: 'USD (US Dollar)', symbol: '$' },
+        { code: 'EUR', name: 'EUR (Euro)', symbol: '€' },
+        { code: 'ILS', name: 'ILS (Israeli Shekel)', symbol: '₪' }
+    ]
+
+    const handleSaveCurrency = () => {
+        // בדוק אם יש expenses קיימים
+        const existingExpenses = utilService.loadFromStorage('expenses')
+        const existingBudget = utilService.loadFromStorage('budget')
+
+        // אם יש נתונים והמטבע שונה
+        if ((existingExpenses && existingExpenses.length > 0) || existingBudget > 0) {
+            const currentCurrency = utilService.loadFromStorage('userCurrency') || 'GEL'
+            if (currentCurrency !== selectedCurrency) {
+                setPendingCurrency(selectedCurrency)
+                setShowCurrencyModal(true)
+                return
+            }
+        }
+
+        // אם אין נתונים או המטבע זהה - פשוט שמור
+        utilService.saveToStorage('userCurrency', selectedCurrency)
+        alert(t.currencySaved)
+    }
+
+    const handleCurrencyChange = (action) => {
+        const exchangeRates = {
+            'GEL': 1,
+            'USD': 2.7,    // 1 USD = 2.7 GEL
+            'EUR': 3.2,    // 1 EUR = 3.2 GEL
+            'ILS': 0.73    // 1 ILS = 0.73 GEL
+        }
+
+        const currentCurrency = utilService.loadFromStorage('userCurrency') || 'GEL'
+
+        if (action === 'convert') {
+            // המר את כל ההוצאות
+            const expenses = utilService.loadFromStorage('expenses') || []
+            const budget = utilService.loadFromStorage('budget') || 0
+
+            const conversionRate = exchangeRates[currentCurrency] / exchangeRates[pendingCurrency]
+
+            const convertedExpenses = expenses.map(exp => ({
+                ...exp,
+                amount: parseFloat((exp.amount * conversionRate).toFixed(2))
+            }))
+
+            const convertedBudget = parseFloat((budget * conversionRate).toFixed(2))
+
+            utilService.saveToStorage('expenses', convertedExpenses)
+            utilService.saveToStorage('budget', convertedBudget)
+            utilService.saveToStorage('userCurrency', pendingCurrency)
+
+            alert(`${t.currencySaved}\n${expenses.length} expenses converted!`)
+        } else if (action === 'reset') {
+            // אפס הכל
+            utilService.saveToStorage('expenses', [])
+            utilService.saveToStorage('budget', 0)
+            utilService.saveToStorage('userCurrency', pendingCurrency)
+
+            alert(t.currencySaved)
+        }
+
+        setSelectedCurrency(pendingCurrency)
+        setPendingCurrency(null)
+    }
 
     return (
         <div className="min-h-screen" style={{ backgroundColor: 'var(--clr-bg-cream)' }} dir={isRTL ? 'rtl' : 'ltr'}>
@@ -129,7 +221,7 @@ export function ProfilePage({ setPage, language, setLanguage }) {
                             style={{ borderColor: 'var(--clr-primary)' }}
                         >
                             <div className="flex items-start gap-4">
-                                <span className="text-3xl"></span>
+                                <span className="text-3xl">💰</span>
                                 <div>
                                     <h4 className="font-bold text-lg mb-1">{t.viewBudget}</h4>
                                     <p className="text-sm text-gray-600">{t.viewBudgetDesc}</p>
@@ -142,7 +234,7 @@ export function ProfilePage({ setPage, language, setLanguage }) {
                             style={{ borderColor: 'var(--clr-primary)' }}
                         >
                             <div className="flex items-start gap-4">
-                                <span className="text-3xl"></span>
+                                <span className="text-3xl">📸</span>
                                 <div>
                                     <h4 className="font-bold text-lg mb-1">{t.tripGallery}</h4>
                                     <p className="text-sm text-gray-600">{t.tripGalleryDesc}</p>
@@ -153,10 +245,46 @@ export function ProfilePage({ setPage, language, setLanguage }) {
                 </div>
 
                 {/* Account Settings */}
-                <div className="bg-white p-6 rounded-lg shadow">
+                <div className="bg-white p-6 rounded-lg shadow mb-8">
                     <h3 className="text-xl font-bold mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
                         {t.accountSettings}
                     </h3>
+
+                    {/* Currency Preference */}
+                    <div className="mb-6 p-4 rounded-lg" style={{ backgroundColor: '#f0fdf4', border: '2px solid var(--clr-primary)' }}>
+                        <div className="flex items-start gap-3 mb-4">
+                            <span className="text-3xl">💱</span>
+                            <div className="flex-1">
+                                <h4 className="font-bold text-lg mb-2">{t.currencyPreference}</h4>
+                                <p className="text-sm text-gray-600 mb-4">{t.currencyPreferenceDesc}</p>
+
+                                <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-end">
+                                    <div className="flex-1 w-full">
+                                        <label className="block text-sm font-medium mb-2">{t.selectCurrency}</label>
+                                        <select
+                                            value={selectedCurrency}
+                                            onChange={(e) => setSelectedCurrency(e.target.value)}
+                                            className="w-full px-4 py-3 border-2 rounded-lg text-lg font-semibold"
+                                            style={{ borderColor: 'var(--clr-primary)' }}
+                                        >
+                                            {currencies.map(curr => (
+                                                <option key={curr.code} value={curr.code}>
+                                                    {curr.symbol} {curr.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <button
+                                        onClick={handleSaveCurrency}
+                                        className="px-6 py-3 rounded-lg font-bold text-white shadow-lg hover:shadow-xl transition"
+                                        style={{ backgroundColor: 'var(--clr-primary)' }}
+                                    >
+                                        {t.saveCurrency}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <div className="mb-6">
                         <h4 className="font-bold mb-2">{t.tripPreferences}</h4>
@@ -176,6 +304,19 @@ export function ProfilePage({ setPage, language, setLanguage }) {
                     </div>
                 </div>
             </div>
+
+            {/* Currency Change Modal */}
+            <CurrencyChangeModal
+                isOpen={showCurrencyModal}
+                onClose={() => {
+                    setShowCurrencyModal(false)
+                    setPendingCurrency(null)
+                }}
+                onConfirm={handleCurrencyChange}
+                oldCurrency={utilService.loadFromStorage('userCurrency') || 'GEL'}
+                newCurrency={pendingCurrency}
+                language={language}
+            />
 
             {/* Footer */}
             <footer className="py-8 mt-8" style={{ backgroundColor: 'var(--clr-bg-cream)' }}>
