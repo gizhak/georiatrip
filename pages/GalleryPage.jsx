@@ -85,7 +85,7 @@ export function GalleryPage({ setPage, language, setLanguage }) {
 
     return (
         <div className="min-h-screen bg-white">
-            <div className="py-12" style={{ backgroundColor: 'var(--clr-bg-dark)', paddingTop: '5px' }}>
+            <div className="py-12" style={{ backgroundColor: 'var(--clr-bg-dark)', paddingTop: '120px' }}>
                 <div className="max-w-7xl mx-auto px-4 text-white">
                     <h1
                         className="text-4xl font-bold mb-2"

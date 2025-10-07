@@ -89,7 +89,7 @@ export function HomePage({ setPage, language, setLanguage, user, setUser }) {
                         </div>
 
                         {/* ניווט דסקטופ */}
-                        <nav className="hidden md:flex gap-4 lg:gap-6 text-white" style={{ fontFamily: 'var(--font-body)' }}>
+                        <nav className="flex gap-2 lg:gap-2 text-white" style={{ fontFamily: 'var(--font-body)' }}>
                             <button onClick={() => setPage('home')} className="font-bold hover:text-gray-300">
                                 {t.homeNav}
                             </button>

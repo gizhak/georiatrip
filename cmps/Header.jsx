@@ -33,10 +33,11 @@ export function Header({ currentPage, setPage, language, setLanguage, user, setU
                     className="max-w-7xl mx-auto px-4 transition-all duration-300"
                     style={{
                         paddingTop: scrolled ? '0.75rem' : '1rem',
-                        paddingBottom: scrolled ? '0.75rem' : '1rem'
+                        paddingBottom: scrolled ? '0.75rem' : '1rem',
+                        backgroundColor: 'var(--clr-bg-dark)'
                     }}
                 >
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between" style={{ gap: '15px' }}>
                         {/* לוגו */}
                         <div className="flex items-center gap-2">
                             <div
@@ -57,16 +58,20 @@ export function Header({ currentPage, setPage, language, setLanguage, user, setU
                             </span>
                         </div>
 
+
+
+
+
                         {/* ניווט */}
                         <nav
-                            className="hidden md:flex gap-6 text-white"
+                            className=" md:flex gap-6 text-white"
                             style={{ fontFamily: 'var(--font-body)' }}
                         >
                             <button
                                 onClick={() => setPage('home')}
                                 className={`transition-colors ${currentPage === 'home'
-                                        ? 'font-bold border-b-2 border-white'
-                                        : 'hover:text-gray-300'
+                                    ? 'font-bold border-b-2 border-white'
+                                    : 'hover:text-gray-300'
                                     }`}
                             >
                                 {language === 'en' ? 'Home' : 'בית'}
@@ -74,8 +79,8 @@ export function Header({ currentPage, setPage, language, setLanguage, user, setU
                             <button
                                 onClick={() => setPage('budget')}
                                 className={`transition-colors ${currentPage === 'budget'
-                                        ? 'font-bold border-b-2 border-white'
-                                        : 'hover:text-gray-300'
+                                    ? 'font-bold border-b-2 border-white'
+                                    : 'hover:text-gray-300'
                                     }`}
                             >
                                 {language === 'en' ? 'Budget' : 'תקציב'}
@@ -83,8 +88,8 @@ export function Header({ currentPage, setPage, language, setLanguage, user, setU
                             <button
                                 onClick={() => setPage('gallery')}
                                 className={`transition-colors ${currentPage === 'gallery'
-                                        ? 'font-bold border-b-2 border-white'
-                                        : 'hover:text-gray-300'
+                                    ? 'font-bold border-b-2 border-white'
+                                    : 'hover:text-gray-300'
                                     }`}
                             >
                                 {language === 'en' ? 'Gallery' : 'גלריה'}
@@ -136,7 +141,7 @@ export function Header({ currentPage, setPage, language, setLanguage, user, setU
                 </div>
 
                 {/* ניווט מובייל - תחתון */}
-                <div
+                {/* <div
                     className="md:hidden flex justify-around items-center px-4 py-2 border-t"
                     style={{
                         borderColor: 'rgba(255, 255, 255, 0.1)',
@@ -148,7 +153,7 @@ export function Header({ currentPage, setPage, language, setLanguage, user, setU
                         className={`flex flex-col items-center gap-1 text-xs transition-colors ${currentPage === 'home' ? 'text-white font-bold' : 'text-gray-400'
                             }`}
                     >
-                        <span className="text-lg">🏠</span>
+                        <span className="text-lg"></span>
                         <span>{language === 'en' ? 'Home' : 'בית'}</span>
                     </button>
                     <button
@@ -156,7 +161,7 @@ export function Header({ currentPage, setPage, language, setLanguage, user, setU
                         className={`flex flex-col items-center gap-1 text-xs transition-colors ${currentPage === 'budget' ? 'text-white font-bold' : 'text-gray-400'
                             }`}
                     >
-                        <span className="text-lg">💰</span>
+                        <span className="text-lg"></span>
                         <span>{language === 'en' ? 'Budget' : 'תקציב'}</span>
                     </button>
                     <button
@@ -164,10 +169,10 @@ export function Header({ currentPage, setPage, language, setLanguage, user, setU
                         className={`flex flex-col items-center gap-1 text-xs transition-colors ${currentPage === 'gallery' ? 'text-white font-bold' : 'text-gray-400'
                             }`}
                     >
-                        <span className="text-lg">📸</span>
+                        <span className="text-lg"></span>
                         <span>{language === 'en' ? 'Gallery' : 'גלריה'}</span>
                     </button>
-                </div>
+                </div> */}
             </header>
 
             <SignInModal

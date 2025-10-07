@@ -2,7 +2,7 @@ const { useState, useEffect } = React
 import { utilService } from '../services/util.service.js'
 import { CurrencyChangeModal } from '../cmps/CurrencyChangeModal.jsx'
 
-export function ProfilePage({ setPage, language, setLanguage, user, setUser }) {
+export function ProfilePage({ setPage, language, setLanguage, user, setUser, showToast }) {
     const [selectedCurrency, setSelectedCurrency] = useState('GEL')
     const [showCurrencyModal, setShowCurrencyModal] = useState(false)
     const [pendingCurrency, setPendingCurrency] = useState(null)
@@ -148,15 +148,17 @@ export function ProfilePage({ setPage, language, setLanguage, user, setUser }) {
         setPendingCurrency(null)
     }
 
-    // ✅ פונקציה לטיפול ב-Sign Out
     const handleSignOut = () => {
-        setUser(null)  // מאפס את המשתמש
-        setPage('home')  // חוזר לדף הבית
+        setUser(null)
+        setPage('home')
     }
 
     return (
         <div className="min-h-screen" style={{ backgroundColor: 'var(--clr-bg-cream)' }} dir={isRTL ? 'rtl' : 'ltr'}>
-            <div className="py-12" style={{ backgroundColor: 'var(--clr-bg-dark)', paddingTop: '5px' }}>
+            {/* ✅ ריווח עבור fixed header */}
+            <div style={{ paddingTop: '140px' }}></div>
+
+            <div className="py-8 -mt-32" style={{ backgroundColor: 'var(--clr-bg-dark)', paddingTop: '7rem' }}>
                 <div className="max-w-7xl mx-auto px-4 text-white">
                     <h1 className="text-4xl font-bold mb-2" style={{ fontFamily: 'var(--font-heading)', marginBottom: '20px' }}>
                         {t.title}

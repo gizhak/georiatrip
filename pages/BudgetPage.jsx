@@ -151,7 +151,7 @@ export function BudgetPage({ setPage, language, setLanguage, user, setUser }) {
     return (
         <div className="min-h-screen" style={{ backgroundColor: 'var(--clr-bg-cream)' }} dir={isRTL ? 'rtl' : 'ltr'}>
             {/* Header - ללא כפתור משתמש (כי זה ב-Header הגלובלי) */}
-            <div className="py-12" style={{ backgroundColor: 'var(--clr-bg-dark)', paddingTop: '1rem' }}>
+            <div className="py-12" style={{ backgroundColor: 'var(--clr-bg-dark)', paddingTop: '7rem' }}>
                 <div className="max-w-7xl mx-auto px-4 text-white">
                     <h2 className="text-4xl font-bold mb-2" style={{ fontFamily: 'var(--font-heading)', marginBottom: '20px' }}>
                         {t.title}
