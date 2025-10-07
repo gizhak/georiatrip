@@ -28,7 +28,7 @@ export function BudgetPage({ setPage, language, setLanguage, user, setUser }) {
         return utilService.loadFromStorage('expenses') || []
     })
 
-    const [participants, setParticipants] = useState(['Guy Izhak', 'Alice', 'Bob', 'Charlie', 'Dana'])
+    const [participants, setParticipants] = useState(['Guy Izhak', 'אסף', 'רועי', 'ניסים', 'אמיר', 'רפי', 'עופר', 'סלבו'])
     const [newParticipant, setNewParticipant] = useState('')
 
     const [newExpense, setNewExpense] = useState({
