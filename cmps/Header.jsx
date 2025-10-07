@@ -6,7 +6,7 @@ export function Header({ currentPage, setPage, language, setLanguage, user, setU
 
     const handleSignIn = (name) => {
         setUser({ name })
-        setShowSignIn(false)
+        // המודאל כבר סוגר את עצמו
     }
 
     return (

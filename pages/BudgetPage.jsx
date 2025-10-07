@@ -144,47 +144,18 @@ export function BudgetPage({ setPage, language, setLanguage, user, setUser }) {
 
     return (
         <div className="min-h-screen" style={{ backgroundColor: 'var(--clr-bg-cream)' }} dir={isRTL ? 'rtl' : 'ltr'}>
-            {/* Header */}
+            {/* Header - ללא כפתור משתמש (כי זה ב-Header הגלובלי) */}
             <div className="py-12" style={{ backgroundColor: 'var(--clr-bg-dark)', paddingTop: '1rem' }}>
                 <div className="max-w-7xl mx-auto px-4 text-white">
-                    <div className="flex justify-between items-start">
-                        <div>
-                            <h2 className="text-4xl font-bold mb-2" style={{ fontFamily: 'var(--font-heading)', marginBottom: '20px' }}>
-                                {t.title}
-                            </h2>
-                            <p style={{ color: 'var(--clr-text-light)', fontFamily: 'var(--font-body)' }}>
-                                {t.subtitle}
-                            </p>
-                            <p className="text-sm mt-2" style={{ color: 'var(--clr-text-light)', fontFamily: 'var(--font-body)' }}>
-                                {t.exchange}
-                            </p>
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <button
-                                onClick={() => setLanguage(language === 'en' ? 'he' : 'en')}
-                                className="px-4 py-2 text-sm border rounded"
-                                style={{
-                                    borderColor: 'var(--clr-secondary)',
-                                    color: 'var(--clr-secondary)'
-                                }}
-                            >
-                                {language === 'en' ? 'עב' : 'EN'}
-                            </button>
-                            {user && (
-                                <button
-                                    onClick={() => setPage('profile')}
-                                    className="flex items-center gap-2 px-4 py-2 rounded"
-                                    style={{
-                                        backgroundColor: 'var(--clr-secondary)',
-                                        color: 'var(--clr-primary)'
-                                    }}
-                                >
-                                    <span>👤</span>
-                                    <span>{user.name}</span>
-                                </button>
-                            )}
-                        </div>
-                    </div>
+                    <h2 className="text-4xl font-bold mb-2" style={{ fontFamily: 'var(--font-heading)', marginBottom: '20px' }}>
+                        {t.title}
+                    </h2>
+                    <p style={{ color: 'var(--clr-text-light)', fontFamily: 'var(--font-body)' }}>
+                        {t.subtitle}
+                    </p>
+                    <p className="text-sm mt-2" style={{ color: 'var(--clr-text-light)', fontFamily: 'var(--font-body)' }}>
+                        {t.exchange}
+                    </p>
                 </div>
             </div>
 

@@ -3,7 +3,6 @@ import { SignInModal } from '../cmps/SignInModal.jsx'
 
 export function HomePage({ setPage, language, setLanguage, user, setUser }) {
     const [showSignIn, setShowSignIn] = useState(false)
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
     const translations = {
         en: {
@@ -29,7 +28,8 @@ export function HomePage({ setPage, language, setLanguage, user, setUser }) {
             copyright: '© 2024 Georgia Trip Tracker. Built for amazing adventures.',
             home: 'Home',
             gallery: 'Gallery',
-            budget: 'Budget'
+            budget: 'Budget',
+            goToBudget: 'Go to Budget'
         },
         he: {
             homeNav: 'בית',
@@ -37,7 +37,7 @@ export function HomePage({ setPage, language, setLanguage, user, setUser }) {
             galleryNav: 'גלריה',
             signIn: 'התחבר',
             title: 'עקוב אחרי הוצאות ההרפתקה שלך עם חברים',
-            subtitle: 'נהל את תקציב הקבוצה, חלק הוצאות בצורה הוגנת, ושמור זיכרונות חיים עם פלטפורמת מעקב הטיולים המקיפה שלנו.',
+            subtitle: 'נהל את תקציב הקבוצה, חלק הוצאות בצורה הוגנת, ושמור זיכרונות חיים עם פלטפורמת מעקב הטיולים המקיפה שלנו המיועדת להרפתקה שלך בגאורגיה.',
             signInButton: 'התחבר לטיול שלך',
             galleryButton: 'צפה בגלריית הטיול',
             browsePhotos: 'רוצה לדפדף בתמונות בלי להתחבר?',
@@ -54,20 +54,23 @@ export function HomePage({ setPage, language, setLanguage, user, setUser }) {
             copyright: '© 2024 מעקב טיול גאורגיה. נבנה להרפתקאות מדהימות.',
             home: 'בית',
             gallery: 'גלריה',
-            budget: 'תקציב'
+            budget: 'תקציב',
+            goToBudget: 'עבור לתקציב'
         }
     }
 
     const t = translations[language]
 
     const handleSignIn = (name) => {
-        setUser({ name }) // ✅ שמור את המשתמש
-        setPage('budget')
+        setUser({ name })
+        // ✅ נותן ל-React זמן לעדכן את ה-state לפני המעבר לדף
+        setTimeout(() => {
+            setPage('budget')
+        }, 50)
     }
 
     return (
         <div className="min-h-screen" style={{ backgroundColor: 'var(--clr-bg-dark)' }}>
-            {/* Header רספונסיבי */}
             {/* Header רספונסיבי */}
             <header className="bg-transparent absolute top-0 left-0 right-0 z-10">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -112,7 +115,7 @@ export function HomePage({ setPage, language, setLanguage, user, setUser }) {
                                 {language === 'en' ? 'עב' : 'EN'}
                             </button>
 
-                            {/* ✅ הצג את השם או כפתור Sign In */}
+                            {/* ✅ אם מחובר - הצג שם + כפתור לפרופיל, אחרת - כפתור Sign In */}
                             {user ? (
                                 <button
                                     onClick={() => setPage('profile')}
@@ -147,7 +150,7 @@ export function HomePage({ setPage, language, setLanguage, user, setUser }) {
             {/* Hero Section רספונסיבי */}
             <div className="flex items-center justify-center min-h-screen pt-20 px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center max-w-6xl mx-auto w-full">
-                    {/* תמונה - מוסתרת במובייל, נראית בטאבלט ומעלה */}
+                    {/* תמונה */}
                     <div className="hidden md:block order-1 lg:order-1">
                         <img
                             src="https://static.wixstatic.com/media/439555_26f790edc1944f88b866b026e77b3c15~mv2.png/v1/fill/w_580,h_1150,al_c,q_90,enc_auto/439555_26f790edc1944f88b866b026e77b3c15~mv2.png"
@@ -179,19 +182,34 @@ export function HomePage({ setPage, language, setLanguage, user, setUser }) {
                             {t.subtitle}
                         </p>
 
-                        {/* כפתורי פעולה - מותאם למובייל */}
+                        {/* כפתורי פעולה */}
                         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                            <button
-                                onClick={() => setShowSignIn(true)}
-                                className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 font-semibold rounded-lg transition hover:opacity-90 text-sm sm:text-base"
-                                style={{
-                                    backgroundColor: 'var(--clr-secondary)',
-                                    color: 'var(--clr-primary)',
-                                    fontFamily: 'var(--font-body)'
-                                }}
-                            >
-                                {t.signInButton}
-                            </button>
+                            {/* ✅ אם מחובר - "עבור לתקציב", אחרת - "התחבר" */}
+                            {user ? (
+                                <button
+                                    onClick={() => setPage('budget')}
+                                    className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 font-semibold rounded-lg transition hover:opacity-90 text-sm sm:text-base"
+                                    style={{
+                                        backgroundColor: 'var(--clr-secondary)',
+                                        color: 'var(--clr-primary)',
+                                        fontFamily: 'var(--font-body)'
+                                    }}
+                                >
+                                    {t.goToBudget}
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={() => setShowSignIn(true)}
+                                    className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 font-semibold rounded-lg transition hover:opacity-90 text-sm sm:text-base"
+                                    style={{
+                                        backgroundColor: 'var(--clr-secondary)',
+                                        color: 'var(--clr-primary)',
+                                        fontFamily: 'var(--font-body)'
+                                    }}
+                                >
+                                    {t.signInButton}
+                                </button>
+                            )}
                             <button
                                 onClick={() => setPage('gallery')}
                                 className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 font-semibold rounded-lg border-2 transition hover:bg-white hover:text-green-900 text-sm sm:text-base"
@@ -215,7 +233,7 @@ export function HomePage({ setPage, language, setLanguage, user, setUser }) {
                 </div>
             </div>
 
-            {/* Features Section רספונסיבי */}
+            {/* Features Section */}
             <div className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8" style={{ backgroundColor: 'var(--clr-bg-cream)' }}>
                 <div className="max-w-6xl mx-auto">
                     <div className="text-center mb-8 sm:mb-12">
@@ -228,7 +246,6 @@ export function HomePage({ setPage, language, setLanguage, user, setUser }) {
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-                        {/* Feature 1 */}
                         <div className="bg-white p-6 sm:p-8 rounded-lg shadow-lg">
                             <div className="text-4xl mb-4">💰</div>
                             <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
@@ -239,7 +256,6 @@ export function HomePage({ setPage, language, setLanguage, user, setUser }) {
                             </p>
                         </div>
 
-                        {/* Feature 2 */}
                         <div className="bg-white p-6 sm:p-8 rounded-lg shadow-lg">
                             <div className="text-4xl mb-4">🤝</div>
                             <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
@@ -250,7 +266,6 @@ export function HomePage({ setPage, language, setLanguage, user, setUser }) {
                             </p>
                         </div>
 
-                        {/* Feature 3 */}
                         <div className="bg-white p-6 sm:p-8 rounded-lg shadow-lg sm:col-span-2 lg:col-span-1">
                             <div className="text-4xl mb-4">📸</div>
                             <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
@@ -264,7 +279,7 @@ export function HomePage({ setPage, language, setLanguage, user, setUser }) {
                 </div>
             </div>
 
-            {/* Footer רספונסיבי */}
+            {/* Footer */}
             <footer className="py-8 sm:py-12 px-4 sm:px-6 lg:px-8" style={{ backgroundColor: 'var(--clr-bg-cream)' }}>
                 <div className="max-w-6xl mx-auto">
                     <div className="flex flex-col md:flex-row justify-between items-center gap-6 sm:gap-8">

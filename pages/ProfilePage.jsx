@@ -30,7 +30,7 @@ export function ProfilePage({ setPage, language, setLanguage, user, setUser }) {
             tripGalleryDesc: 'View and upload photos',
             accountSettings: 'Account Settings',
             tripPreferences: 'Trip Preferences',
-            tripPreferencesDesc: 'Your account is set up for the Georgia Adventure 2024 trip. All your expenses and photos are automatically associated with this trip.',
+            tripPreferencesDesc: 'Your account is set up for the Georgia Adventure 2025 trip. All your expenses and photos are automatically associated with this trip.',
             currencyPreference: 'Currency Preference',
             currencyPreferenceDesc: 'Choose your preferred currency for the budget tracker. This will update all financial displays.',
             selectCurrency: 'Select Currency',
