@@ -25,7 +25,7 @@ export function HomePage({ setPage, language, setLanguage, user, setUser }) {
             photoDesc: 'Upload and share trip memories with your group. Access photos anytime, even without logging in.',
             footerTitle: 'Georgia Trip Tracker',
             footerDesc: 'Making group travel expenses simple and memories lasting.',
-            copyright: '© 2025 Georgia Trip Tracker. Built for amazing adventures.',
+            copyright: '© 2024 Georgia Trip Tracker. Built for amazing adventures.',
             home: 'Home',
             gallery: 'Gallery',
             budget: 'Budget',
@@ -72,7 +72,7 @@ export function HomePage({ setPage, language, setLanguage, user, setUser }) {
     return (
         <div className="min-h-screen" style={{ backgroundColor: 'var(--clr-bg-dark)' }}>
             {/* Header רספונסיבי */}
-            <header className="bg-transparent absolute top-0 left-0 right-0 z-10 ">
+            <header className="bg-transparent absolute top-0 left-0 right-0 z-10">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
                     <div className="flex items-center justify-between">
                         {/* לוגו */}

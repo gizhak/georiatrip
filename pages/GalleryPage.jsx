@@ -1,10 +1,18 @@
-const { useState } = React
+const { useState, useEffect } = React
+import { utilService } from '../services/util.service.js'
 
-// 📸 דף גלריה
+// 📸 דף גלריה - עם שמירה ב-localStorage
 export function GalleryPage({ setPage, language, setLanguage }) {
-    // State לניהול תמונות
-    const [photos, setPhotos] = useState([])
+    // ✅ טוען תמונות מ-localStorage בטעינה ראשונית
+    const [photos, setPhotos] = useState(() => {
+        return utilService.loadFromStorage('galleryPhotos') || []
+    })
     const [showUploadModal, setShowUploadModal] = useState(false)
+
+    // ✅ שומר תמונות ב-localStorage כל פעם שהן משתנות
+    useEffect(() => {
+        utilService.saveToStorage('galleryPhotos', photos)
+    }, [photos])
 
     const translations = {
         en: {

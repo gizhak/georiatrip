@@ -28,7 +28,9 @@ export function BudgetPage({ setPage, language, setLanguage, user, setUser }) {
         return utilService.loadFromStorage('expenses') || []
     })
 
-    const [participants, setParticipants] = useState(['Guy Izhak', 'אסף', 'רועי', 'ניסים', 'אמיר', 'רפי', 'עופר', 'סלבו'])
+    const [participants, setParticipants] = useState(() => {
+        return utilService.loadFromStorage('participants') || ['Guy Izhak', 'Alice', 'Bob', 'Charlie', 'Dana']
+    })
     const [newParticipant, setNewParticipant] = useState('')
 
     const [newExpense, setNewExpense] = useState({
@@ -49,6 +51,10 @@ export function BudgetPage({ setPage, language, setLanguage, user, setUser }) {
     useEffect(() => {
         utilService.saveToStorage('budget', budget)
     }, [budget])
+
+    useEffect(() => {
+        utilService.saveToStorage('participants', participants)
+    }, [participants])
 
     // עדכן מטבע אם השתנה בפרופיל
     useEffect(() => {
