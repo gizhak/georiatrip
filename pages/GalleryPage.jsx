@@ -2,7 +2,7 @@ const { useState, useEffect } = React
 import { utilService } from '../services/util.service.js'
 
 // 📸 דף גלריה - עם שמירה ב-localStorage
-export function GalleryPage({ setPage, language, setLanguage }) {
+export function GalleryPage({ setPage, language, setLanguage, user, setUser, showToast }) {
     // ✅ טוען תמונות מ-localStorage בטעינה ראשונית
     const [photos, setPhotos] = useState(() => {
         return utilService.loadFromStorage('galleryPhotos') || []
@@ -71,16 +71,30 @@ export function GalleryPage({ setPage, language, setLanguage }) {
                 }
                 setPhotos([newPhoto, ...photos])
                 setShowUploadModal(false)
+                showToast(
+                    language === 'en' ? '📸 Photo uploaded successfully!' : '📸 התמונה הועלתה בהצלחה!',
+                    'success',
+                    3000
+                )
             }
             reader.readAsDataURL(file)
+        } else {
+            showToast(
+                language === 'en' ? '⚠️ Please select a valid image file' : '⚠️ נא לבחור קובץ תמונה תקין',
+                'warning',
+                3000
+            )
         }
     }
 
     // פונקציה למחיקת תמונה
     const deletePhoto = (id) => {
-        if (confirm(language === 'en' ? 'Delete this photo?' : 'למחוק תמונה זו?')) {
-            setPhotos(photos.filter(photo => photo.id !== id))
-        }
+        setPhotos(photos.filter(photo => photo.id !== id))
+        showToast(
+            language === 'en' ? '🗑️ Photo deleted successfully' : '🗑️ התמונה נמחקה בהצלחה',
+            'success',
+            3000
+        )
     }
 
     return (

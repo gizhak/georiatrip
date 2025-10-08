@@ -9,7 +9,7 @@ import { ExpenseChart } from '../cmps/budget/ExpenseChart.jsx'
 import { ExpenseForm } from '../cmps/budget/ExpenseForm.jsx'
 import { ExpenseList } from '../cmps/budget/ExpenseList.jsx'
 
-export function BudgetPage({ setPage, language, setLanguage, user, setUser }) {
+export function BudgetPage({ setPage, language, setLanguage, user, setUser, showToast }) {
     // State management
     const [showAddExpense, setShowAddExpense] = useState(false)
     const [showEditBudget, setShowEditBudget] = useState(false)
@@ -80,7 +80,7 @@ export function BudgetPage({ setPage, language, setLanguage, user, setUser }) {
     const handleSaveExpense = () => {
         const validation = expenseService.validateExpense(newExpense)
         if (!validation.valid) {
-            alert(t[validation.error])
+            showToast(t[validation.error], 'error', 4000)
             return
         }
 
@@ -93,8 +93,18 @@ export function BudgetPage({ setPage, language, setLanguage, user, setUser }) {
 
         if (editingExpense) {
             setExpenses(expenses.map(exp => exp.id === editingExpense.id ? expense : exp))
+            showToast(
+                language === 'en' ? '✅ Expense updated successfully!' : '✅ ההוצאה עודכנה בהצלחה!',
+                'success',
+                3000
+            )
         } else {
             setExpenses([expense, ...expenses])
+            showToast(
+                language === 'en' ? '✅ Expense added successfully!' : '✅ ההוצאה נוספה בהצלחה!',
+                'success',
+                3000
+            )
         }
 
         resetExpenseForm()
@@ -121,31 +131,53 @@ export function BudgetPage({ setPage, language, setLanguage, user, setUser }) {
     }
 
     const deleteExpense = (id) => {
-        if (confirm(t.deleteConfirm)) {
-            setExpenses(expenses.filter(exp => exp.id !== id))
-        }
+        setExpenses(expenses.filter(exp => exp.id !== id))
+        showToast(
+            language === 'en' ? '🗑️ Expense deleted successfully' : '🗑️ ההוצאה נמחקה בהצלחה',
+            'success',
+            3000
+        )
     }
 
     const handleUpdateBudget = (newBudget) => {
         setBudget(parseFloat(newBudget))
         setShowEditBudget(false)
+        showToast(
+            language === 'en' ? '💰 Budget updated successfully!' : '💰 התקציב עודכן בהצלחה!',
+            'success',
+            3000
+        )
     }
 
     const addParticipant = () => {
         if (newParticipant.trim() && !participants.includes(newParticipant.trim())) {
             setParticipants([...participants, newParticipant.trim()])
+            showToast(
+                language === 'en' ? `✅ ${newParticipant.trim()} added successfully` : `✅ ${newParticipant.trim()} נוסף בהצלחה`,
+                'success',
+                3000
+            )
             setNewParticipant('')
+        } else if (participants.includes(newParticipant.trim())) {
+            showToast(
+                language === 'en' ? '⚠️ Participant already exists' : '⚠️ המשתתף כבר קיים',
+                'warning',
+                3000
+            )
         }
     }
 
     const removeParticipant = (name) => {
         if (name === 'Guy Izhak') {
-            alert(t.cannotRemoveYourself)
+            showToast(t.cannotRemoveYourself, 'warning', 3000)
             return
         }
-        if (confirm(`${t.removeConfirm} ${name}?`)) {
-            setParticipants(participants.filter(p => p !== name))
-        }
+        setParticipants(participants.filter(p => p !== name))
+        showToast(
+            language === 'en' ? `✅ ${name} removed successfully` : `✅ ${name} הוסר בהצלחה`,
+            'success',
+            3000
+        )
     }
 
     return (

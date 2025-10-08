@@ -105,7 +105,7 @@ export function ProfilePage({ setPage, language, setLanguage, user, setUser, sho
         }
 
         utilService.saveToStorage('userCurrency', selectedCurrency)
-        alert(t.currencySaved)
+        showToast(t.currencySaved, 'success', 3000)
     }
 
     const handleCurrencyChange = (action) => {
@@ -135,13 +135,25 @@ export function ProfilePage({ setPage, language, setLanguage, user, setUser, sho
             utilService.saveToStorage('budget', convertedBudget)
             utilService.saveToStorage('userCurrency', pendingCurrency)
 
-            alert(`${t.currencySaved}\n${expenses.length} expenses converted!`)
+            showToast(
+                language === 'en'
+                    ? `✅ Currency updated! ${expenses.length} expenses converted.`
+                    : `✅ המטבע עודכן! ${expenses.length} הוצאות הומרו.`,
+                'success',
+                4000
+            )
         } else if (action === 'reset') {
             utilService.saveToStorage('expenses', [])
             utilService.saveToStorage('budget', 0)
             utilService.saveToStorage('userCurrency', pendingCurrency)
 
-            alert(t.currencySaved)
+            showToast(
+                language === 'en'
+                    ? '✅ Currency updated! All data has been reset.'
+                    : '✅ המטבע עודכן! כל הנתונים אופסו.',
+                'success',
+                4000
+            )
         }
 
         setSelectedCurrency(pendingCurrency)

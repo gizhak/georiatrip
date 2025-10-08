@@ -109,6 +109,7 @@ export function App() {
                         language={language}
                         setLanguage={setLanguage}
                         user={user}
+                        setUser={setUser}
                         showToast={showToast}
                     />
                 )}

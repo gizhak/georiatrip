@@ -37,7 +37,7 @@ export function Header({ currentPage, setPage, language, setLanguage, user, setU
                         backgroundColor: 'var(--clr-bg-dark)'
                     }}
                 >
-                    <div className="flex items-center justify-between" style={{ gap: '15px' }}>
+                    <div className="flex items-center justify-between" style={{ gap: '1px' }}>
                         {/* לוגו */}
                         <div className="flex items-center gap-2">
                             <div
