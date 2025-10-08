@@ -64,7 +64,7 @@ export function Header({ currentPage, setPage, language, setLanguage, user, setU
 
                         {/* ניווט */}
                         <nav
-                            className=" md:flex gap-6 text-white"
+                            className=" flex gap-2 text-white"
                             style={{ fontFamily: 'var(--font-body)' }}
                         >
                             <button
