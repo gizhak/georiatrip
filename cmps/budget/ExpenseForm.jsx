@@ -150,7 +150,7 @@ export function ExpenseForm({
                                 </span>
                             </div>
                         </div>
-                        {expense.paidBy === 'Guy Izhak' && !expense.paidWithCard && (
+                        {expense.paidBy === expenseService.getCurrentUser() && !expense.paidWithCard && (
                             <div className="mt-3 pt-3 border-t" style={{ borderColor: '#3b82f6' }}>
                                 <div className="flex justify-between items-center text-sm">
                                     <span className="font-bold" style={{ color: '#dc2626' }}>

@@ -25,7 +25,7 @@ export function HomePage({ setPage, language, setLanguage, user, setUser }) {
             photoDesc: 'Upload and share trip memories with your group. Access photos anytime, even without logging in.',
             footerTitle: 'Georgia Trip Tracker',
             footerDesc: 'Making group travel expenses simple and memories lasting.',
-            copyright: '© 2024 Georgia Trip Tracker. Built for amazing adventures.',
+            footerCopyright: '© 2025 Georgia Trip Tracker. Built for amazing adventures.',
             home: 'Home',
             gallery: 'Gallery',
             budget: 'Budget',
@@ -51,7 +51,7 @@ export function HomePage({ setPage, language, setLanguage, user, setUser }) {
             photoDesc: 'העלה ושתף זיכרונות טיול עם הקבוצה שלך. גישה לתמונות בכל עת, אפילו בלי להתחבר.',
             footerTitle: 'מעקב טיול גאורגיה',
             footerDesc: 'הופכים הוצאות טיולים קבוצתיים לפשוטות וזיכרונות לנצחיים.',
-            copyright: '© 2024 מעקב טיול גאורגיה. נבנה להרפתקאות מדהימות.',
+            footerCopyright: '© 2025 מעקב טיול גאורגיה. נבנה להרפתקאות מדהימות.',
             home: 'בית',
             gallery: 'גלריה',
             budget: 'תקציב',
@@ -61,9 +61,8 @@ export function HomePage({ setPage, language, setLanguage, user, setUser }) {
 
     const t = translations[language]
 
-    const handleSignIn = (name) => {
-        setUser({ name })
-        // ✅ נותן ל-React זמן לעדכן את ה-state לפני המעבר לדף
+    const handleSignIn = (userData) => {
+        setUser(userData)
         setTimeout(() => {
             setPage('budget')
         }, 50)
@@ -115,7 +114,6 @@ export function HomePage({ setPage, language, setLanguage, user, setUser }) {
                                 {language === 'en' ? 'עב' : 'EN'}
                             </button>
 
-                            {/* ✅ אם מחובר - הצג שם + כפתור לפרופיל, אחרת - כפתור Sign In */}
                             {user ? (
                                 <button
                                     onClick={() => setPage('profile')}
@@ -184,7 +182,6 @@ export function HomePage({ setPage, language, setLanguage, user, setUser }) {
 
                         {/* כפתורי פעולה */}
                         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                            {/* ✅ אם מחובר - "עבור לתקציב", אחרת - "התחבר" */}
                             {user ? (
                                 <button
                                     onClick={() => setPage('budget')}
@@ -298,7 +295,7 @@ export function HomePage({ setPage, language, setLanguage, user, setUser }) {
                         </div>
                     </div>
                     <div className="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t text-center text-xs sm:text-sm text-gray-600" style={{ borderColor: 'var(--clr-primary)' }}>
-                        {t.copyright}
+                        {t.footerCopyright}
                     </div>
                 </div>
             </footer>

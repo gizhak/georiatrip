@@ -2,13 +2,12 @@ const { useState, useEffect, Fragment } = React
 import { utilService } from '../services/util.service.js'
 
 export function SignInModal({ isOpen, onClose, language, onSignIn }) {
-    const [signInMethod, setSignInMethod] = useState(null) // null, 'email', 'google', 'facebook', 'google-accounts'
+    const [signInMethod, setSignInMethod] = useState(null)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [userName, setUserName] = useState('')
     const [savedGoogleAccounts, setSavedGoogleAccounts] = useState([])
 
-    // טען חשבונות Google שמורים
     useEffect(() => {
         const accounts = utilService.loadFromStorage('googleAccounts') || []
         setSavedGoogleAccounts(accounts)
@@ -70,29 +69,54 @@ export function SignInModal({ isOpen, onClose, language, onSignIn }) {
     if (!isOpen) return null
 
     const handleGoogleAccountSelect = (account) => {
-        // שמור את השם מהחשבון
-        onSignIn(account.name)
+        // עדכן תאריך כניסה אחרונה
+        const updatedAccount = {
+            ...account,
+            lastLogin: new Date().toISOString()
+        }
+
+        // עדכן ב-localStorage
+        const updatedAccounts = savedGoogleAccounts.map(acc =>
+            acc.id === account.id ? updatedAccount : acc
+        )
+        setSavedGoogleAccounts(updatedAccounts)
+        utilService.saveToStorage('googleAccounts', updatedAccounts)
+
+        // התחבר
+        onSignIn({
+            name: account.name,
+            email: account.email,
+            createdAt: account.createdAt,
+            lastLogin: updatedAccount.lastLogin
+        })
         resetAndClose()
     }
 
     const handleNewGoogleAccount = () => {
-        // עבור למסך הזנת פרטים
         setSignInMethod('google-new')
     }
 
     const saveGoogleAccount = (name, email) => {
+        const now = new Date().toISOString()
         const newAccount = {
             id: Date.now(),
             name,
             email: email || `${name.toLowerCase().replace(/\s+/g, '')}@gmail.com`,
-            avatar: name.charAt(0).toUpperCase()
+            avatar: name.charAt(0).toUpperCase(),
+            createdAt: now,
+            lastLogin: now
         }
 
         const accounts = [...savedGoogleAccounts, newAccount]
         setSavedGoogleAccounts(accounts)
         utilService.saveToStorage('googleAccounts', accounts)
 
-        onSignIn(name)
+        onSignIn({
+            name: newAccount.name,
+            email: newAccount.email,
+            createdAt: newAccount.createdAt,
+            lastLogin: newAccount.lastLogin
+        })
         resetAndClose()
     }
 
@@ -104,14 +128,26 @@ export function SignInModal({ isOpen, onClose, language, onSignIn }) {
 
     const handleSocialLogin = () => {
         if (userName.trim()) {
-            onSignIn(userName.trim())
+            const now = new Date().toISOString()
+            onSignIn({
+                name: userName.trim(),
+                email: `${userName.trim().toLowerCase().replace(/\s+/g, '')}@${signInMethod}.com`,
+                createdAt: now,
+                lastLogin: now
+            })
             resetAndClose()
         }
     }
 
     const handleEmailLogin = () => {
         if (email && password && userName.trim()) {
-            onSignIn(userName.trim())
+            const now = new Date().toISOString()
+            onSignIn({
+                name: userName.trim(),
+                email: email,
+                createdAt: now,
+                lastLogin: now
+            })
             resetAndClose()
         }
     }
@@ -133,7 +169,6 @@ export function SignInModal({ isOpen, onClose, language, onSignIn }) {
                 className="bg-white rounded-lg p-8 max-w-md w-full mx-4 relative"
                 onClick={(e) => e.stopPropagation()}
             >
-                {/* כפתור סגירה */}
                 <button
                     onClick={resetAndClose}
                     className="absolute top-4 right-4 text-2xl text-gray-500 hover:text-gray-700"
@@ -141,7 +176,6 @@ export function SignInModal({ isOpen, onClose, language, onSignIn }) {
                     ✕
                 </button>
 
-                {/* תוכן */}
                 {signInMethod === null ? (
                     <Fragment>
                         <h2 className="text-3xl font-bold text-center mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
@@ -152,7 +186,6 @@ export function SignInModal({ isOpen, onClose, language, onSignIn }) {
                         </p>
 
                         <div className="space-y-3">
-                            {/* Google */}
                             <button
                                 onClick={() => setSignInMethod('google-accounts')}
                                 className="w-full flex items-center justify-center gap-3 px-6 py-3 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition"
@@ -166,7 +199,6 @@ export function SignInModal({ isOpen, onClose, language, onSignIn }) {
                                 <span>{t.loginGoogle}</span>
                             </button>
 
-                            {/* Facebook */}
                             <button
                                 onClick={() => setSignInMethod('facebook')}
                                 className="w-full flex items-center justify-center gap-3 px-6 py-3 rounded-lg transition text-white"
@@ -178,14 +210,12 @@ export function SignInModal({ isOpen, onClose, language, onSignIn }) {
                                 <span>{t.loginFacebook}</span>
                             </button>
 
-                            {/* Divider */}
                             <div className="flex items-center gap-3 my-4">
                                 <div className="flex-1 border-t border-gray-300"></div>
                                 <span className="text-gray-500 text-sm">{t.or}</span>
                                 <div className="flex-1 border-t border-gray-300"></div>
                             </div>
 
-                            {/* Email */}
                             <button
                                 onClick={() => setSignInMethod('email')}
                                 className="w-full px-6 py-3 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition"
@@ -196,7 +226,6 @@ export function SignInModal({ isOpen, onClose, language, onSignIn }) {
                     </Fragment>
                 ) : signInMethod === 'google-accounts' ? (
                     <Fragment>
-                        {/* Google Account Selection Screen */}
                         <div className="text-center mb-6">
                             <svg className="w-12 h-12 mx-auto mb-4" viewBox="0 0 24 24">
                                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -232,7 +261,6 @@ export function SignInModal({ isOpen, onClose, language, onSignIn }) {
                                 </button>
                             ))}
 
-                            {/* Use Another Account */}
                             <button
                                 onClick={handleNewGoogleAccount}
                                 className="w-full flex items-center gap-3 p-3 border-2 border-gray-200 rounded-lg hover:bg-gray-50 transition"

@@ -11,10 +11,15 @@ export const expenseService = {
     calculateMyBalance,
     getExpensesByCategory,
     getSpendingByDate,
-    validateExpense
+    validateExpense,
+    getCurrentUser
 }
 
-const CURRENT_USER = 'Guy Izhak'
+// פונקציה לקבלת המשתמש הנוכחי מ-localStorage
+function getCurrentUser() {
+    const user = JSON.parse(localStorage.getItem('currentUser'))
+    return user ? user.name : 'Guest'
+}
 
 // סמלי מטבעות
 function getCurrencySymbol(currency) {
@@ -40,6 +45,7 @@ function filterCardExpenses(expenses) {
 // חישוב כמה אני הוצאתי במזומן (החלק שלי בלבד)
 function calculateMyCashSpent(expenses) {
     const cashExpenses = filterCashExpenses(expenses)
+    const currentUser = getCurrentUser()
 
     return cashExpenses.reduce((sum, exp) => {
         const amount = parseFloat(exp.amount || 0)
@@ -47,7 +53,7 @@ function calculateMyCashSpent(expenses) {
         const myShare = amount / splitCount
 
         // אם אני במי שמתחלקים, זה החלק שלי
-        if (exp.splitWith.includes(CURRENT_USER)) {
+        if (exp.splitWith.includes(currentUser)) {
             return sum + myShare
         }
         return sum
@@ -75,15 +81,16 @@ function calculateRemainingCash(budget, expenses) {
 // חישוב החלק שלי בכל ההוצאות
 function calculateMyShare(expenses) {
     let myActualSpending = 0
+    const currentUser = getCurrentUser()
 
     expenses.forEach(exp => {
         const amount = parseFloat(exp.amount || 0)
         const splitCount = exp.splitWith.length || 1
         const sharePerPerson = amount / splitCount
 
-        if (exp.paidBy === CURRENT_USER) {
+        if (exp.paidBy === currentUser) {
             myActualSpending += sharePerPerson
-        } else if (exp.splitWith.includes(CURRENT_USER)) {
+        } else if (exp.splitWith.includes(currentUser)) {
             myActualSpending += sharePerPerson
         }
     })
@@ -95,15 +102,16 @@ function calculateMyShare(expenses) {
 function calculateMyBalance(expenses) {
     let iOwe = 0
     let owedToMe = 0
+    const currentUser = getCurrentUser()
 
     expenses.forEach(exp => {
         const amount = parseFloat(exp.amount || 0)
         const splitCount = exp.splitWith.length || 1
         const sharePerPerson = amount / splitCount
 
-        if (exp.paidBy === CURRENT_USER && splitCount > 1) {
+        if (exp.paidBy === currentUser && splitCount > 1) {
             owedToMe += (amount - sharePerPerson)
-        } else if (exp.paidBy !== CURRENT_USER && exp.splitWith.includes(CURRENT_USER)) {
+        } else if (exp.paidBy !== currentUser && exp.splitWith.includes(currentUser)) {
             iOwe += sharePerPerson
         }
     })
@@ -113,13 +121,15 @@ function calculateMyBalance(expenses) {
 
 // קבלת הוצאות לפי קטגוריה
 function getExpensesByCategory(expenses, categories) {
+    const currentUser = getCurrentUser()
+
     return categories.map(cat => {
         const total = expenses
             .filter(exp => exp.category === cat)
             .reduce((sum, exp) => {
                 const amount = parseFloat(exp.amount || 0)
                 const splitCount = exp.splitWith.length || 1
-                const myShare = exp.splitWith.includes(CURRENT_USER) ? amount / splitCount : 0
+                const myShare = exp.splitWith.includes(currentUser) ? amount / splitCount : 0
                 return sum + myShare
             }, 0)
         return { category: cat, amount: total }
@@ -128,10 +138,12 @@ function getExpensesByCategory(expenses, categories) {
 
 // קבלת הוצאות לפי תאריך (לגרף)
 function getSpendingByDate(expenses) {
+    const currentUser = getCurrentUser()
+
     const byDate = expenses.reduce((acc, exp) => {
         const amount = parseFloat(exp.amount || 0)
         const splitCount = exp.splitWith.length || 1
-        const myShare = exp.splitWith.includes(CURRENT_USER) ? amount / splitCount : 0
+        const myShare = exp.splitWith.includes(currentUser) ? amount / splitCount : 0
 
         const existing = acc.find(item => item.date === exp.date)
         if (existing) {

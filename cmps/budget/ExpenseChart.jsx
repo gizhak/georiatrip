@@ -6,6 +6,7 @@ export function ExpenseChart({ expenses, currency, t, isRTL }) {
     const myBalance = expenseService.calculateMyBalance(expenses)
     const myShare = expenseService.calculateMyShare(expenses)
     const getCurrencySymbol = expenseService.getCurrencySymbol
+    const currentUserName = expenseService.getCurrentUser()
 
     if (expenses.length === 0) {
         return (
@@ -23,7 +24,7 @@ export function ExpenseChart({ expenses, currency, t, isRTL }) {
     return (
         <div className="bg-white p-6 rounded-lg shadow mb-8">
             <h3 className="text-xl font-bold mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
-                {t.spendingOverTime}
+                {t.spendingOverTime} ({currentUserName})
             </h3>
 
             {/* סטטיסטיקות מעל הגרף */}

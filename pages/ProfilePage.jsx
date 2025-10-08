@@ -1,5 +1,5 @@
 const { useState, useEffect } = React
-import { utilService } from '../services/util.service.js'
+import { userDataService } from '../services/user-data.service.js'
 import { CurrencyChangeModal } from '../cmps/CurrencyChangeModal.jsx'
 
 export function ProfilePage({ setPage, language, setLanguage, user, setUser, showToast }) {
@@ -8,20 +8,30 @@ export function ProfilePage({ setPage, language, setLanguage, user, setUser, sho
     const [pendingCurrency, setPendingCurrency] = useState(null)
 
     useEffect(() => {
-        const savedCurrency = utilService.loadFromStorage('userCurrency')
-        if (savedCurrency) setSelectedCurrency(savedCurrency)
-    }, [])
+        if (user && user.name) {
+            const savedCurrency = userDataService.getUserCurrency(user.name)
+            if (savedCurrency) setSelectedCurrency(savedCurrency)
+        }
+    }, [user])
+
+    // פונקציה לפורמט תאריך
+    const formatDate = (dateString) => {
+        if (!dateString) return 'N/A'
+        const date = new Date(dateString)
+        const day = date.getDate().toString().padStart(2, '0')
+        const month = (date.getMonth() + 1).toString().padStart(2, '0')
+        const year = date.getFullYear()
+        return `${day}.${month}.${year}`
+    }
 
     const translations = {
         en: {
             title: 'Profile',
             subtitle: 'Manage your trip account',
             profileInfo: 'Profile Information',
-            userName: 'Guy Izhak',
-            email: 'decoding.c.t@gmail.com',
             verified: 'Verified',
-            memberSince: 'Member since 5.10.2025',
-            lastLogin: 'Last login: 5.10.2025',
+            memberSince: 'Member since',
+            lastLogin: 'Last login:',
             approved: 'APPROVED',
             quickActions: 'Quick Actions',
             viewBudget: 'View Budget',
@@ -50,11 +60,9 @@ export function ProfilePage({ setPage, language, setLanguage, user, setUser, sho
             title: 'פרופיל',
             subtitle: 'נהל את חשבון הטיול שלך',
             profileInfo: 'מידע פרופיל',
-            userName: 'גיא יצחק',
-            email: 'decoding.c.t@gmail.com',
             verified: 'מאומת',
-            memberSince: 'חבר מאז 5.10.2025',
-            lastLogin: 'כניסה אחרונה: 5.10.2025',
+            memberSince: 'חבר מאז',
+            lastLogin: 'כניסה אחרונה:',
             approved: 'מאושר',
             quickActions: 'פעולות מהירות',
             viewBudget: 'צפה בתקציב',
@@ -63,7 +71,7 @@ export function ProfilePage({ setPage, language, setLanguage, user, setUser, sho
             tripGalleryDesc: 'צפה והעלה תמונות',
             accountSettings: 'הגדרות חשבון',
             tripPreferences: 'העדפות טיול',
-            tripPreferencesDesc: 'החשבון שלך מוגדר לטיול הרפתקת גאורגיה 2024. כל ההוצאות והתמונות שלך משויכים אוטומטית לטיול זה.',
+            tripPreferencesDesc: 'החשבון שלך מוגדר לטיול הרפתקת גאורגיה 2024. כל ההוצאות והתמונות שלך משוייכים אוטומטית לטיול זה.',
             currencyPreference: 'העדפת מטבע',
             currencyPreferenceDesc: 'בחר את המטבע המועדף עליך למעקב התקציב. זה יעדכן את כל התצוגות הכספיות.',
             selectCurrency: 'בחר מטבע',
@@ -92,11 +100,13 @@ export function ProfilePage({ setPage, language, setLanguage, user, setUser, sho
     ]
 
     const handleSaveCurrency = () => {
-        const existingExpenses = utilService.loadFromStorage('expenses')
-        const existingBudget = utilService.loadFromStorage('budget')
+        if (!user || !user.name) return
+
+        const existingExpenses = userDataService.getUserExpenses(user.name)
+        const existingBudget = userDataService.getUserBudget(user.name)
 
         if ((existingExpenses && existingExpenses.length > 0) || existingBudget > 0) {
-            const currentCurrency = utilService.loadFromStorage('userCurrency') || 'GEL'
+            const currentCurrency = userDataService.getUserCurrency(user.name)
             if (currentCurrency !== selectedCurrency) {
                 setPendingCurrency(selectedCurrency)
                 setShowCurrencyModal(true)
@@ -104,11 +114,13 @@ export function ProfilePage({ setPage, language, setLanguage, user, setUser, sho
             }
         }
 
-        utilService.saveToStorage('userCurrency', selectedCurrency)
+        userDataService.saveUserCurrency(user.name, selectedCurrency)
         showToast(t.currencySaved, 'success', 3000)
     }
 
     const handleCurrencyChange = (action) => {
+        if (!user || !user.name) return
+
         const exchangeRates = {
             'GEL': 1,
             'USD': 2.7,
@@ -116,11 +128,11 @@ export function ProfilePage({ setPage, language, setLanguage, user, setUser, sho
             'ILS': 0.73
         }
 
-        const currentCurrency = utilService.loadFromStorage('userCurrency') || 'GEL'
+        const currentCurrency = userDataService.getUserCurrency(user.name)
 
         if (action === 'convert') {
-            const expenses = utilService.loadFromStorage('expenses') || []
-            const budget = utilService.loadFromStorage('budget') || 0
+            const expenses = userDataService.getUserExpenses(user.name)
+            const budget = userDataService.getUserBudget(user.name)
 
             const conversionRate = exchangeRates[currentCurrency] / exchangeRates[pendingCurrency]
 
@@ -131,9 +143,9 @@ export function ProfilePage({ setPage, language, setLanguage, user, setUser, sho
 
             const convertedBudget = parseFloat((budget * conversionRate).toFixed(2))
 
-            utilService.saveToStorage('expenses', convertedExpenses)
-            utilService.saveToStorage('budget', convertedBudget)
-            utilService.saveToStorage('userCurrency', pendingCurrency)
+            userDataService.saveUserExpenses(user.name, convertedExpenses)
+            userDataService.saveUserBudget(user.name, convertedBudget)
+            userDataService.saveUserCurrency(user.name, pendingCurrency)
 
             showToast(
                 language === 'en'
@@ -143,9 +155,9 @@ export function ProfilePage({ setPage, language, setLanguage, user, setUser, sho
                 4000
             )
         } else if (action === 'reset') {
-            utilService.saveToStorage('expenses', [])
-            utilService.saveToStorage('budget', 0)
-            utilService.saveToStorage('userCurrency', pendingCurrency)
+            userDataService.saveUserExpenses(user.name, [])
+            userDataService.saveUserBudget(user.name, 0)
+            userDataService.saveUserCurrency(user.name, pendingCurrency)
 
             showToast(
                 language === 'en'
@@ -167,7 +179,6 @@ export function ProfilePage({ setPage, language, setLanguage, user, setUser, sho
 
     return (
         <div className="min-h-screen" style={{ backgroundColor: 'var(--clr-bg-cream)' }} dir={isRTL ? 'rtl' : 'ltr'}>
-            {/* ✅ ריווח עבור fixed header */}
             <div style={{ paddingTop: '140px' }}></div>
 
             <div className="py-8 -mt-32" style={{ backgroundColor: 'var(--clr-bg-dark)', paddingTop: '7rem' }}>
@@ -191,25 +202,25 @@ export function ProfilePage({ setPage, language, setLanguage, user, setUser, sho
                             className="w-20 h-20 rounded-full flex items-center justify-center text-white text-3xl font-bold"
                             style={{ backgroundColor: 'var(--clr-primary)' }}
                         >
-                            G
+                            {user && user.name ? user.name.charAt(0).toUpperCase() : 'G'}
                         </div>
                         <div className="flex-1">
-                            <h4 className="text-2xl font-bold mb-2">{t.userName}</h4>
+                            <h4 className="text-2xl font-bold mb-2">{user && user.name ? user.name : 'Guest'}</h4>
                             <div className="space-y-2 text-sm text-gray-600">
                                 <p className="flex items-center gap-2">
-                                    <span>📧</span> {t.email}
+                                    <span>📧</span> {user && user.email ? user.email : 'No email'}
                                     <span className="px-2 py-1 rounded text-xs" style={{ backgroundColor: 'var(--clr-secondary)', color: 'var(--clr-primary)' }}>
                                         {t.verified}
                                     </span>
                                 </p>
                                 <p className="flex items-center gap-2">
-                                    <span>👤</span> {t.userName}
+                                    <span>👤</span> {user && user.name ? user.name : 'Guest'}
                                 </p>
                                 <p className="flex items-center gap-2">
-                                    <span>📅</span> {t.memberSince}
+                                    <span>📅</span> {t.memberSince} {formatDate(user && user.createdAt ? user.createdAt : null)}
                                 </p>
                                 <p className="flex items-center gap-2">
-                                    <span>📅</span> {t.lastLogin}
+                                    <span>📅</span> {t.lastLogin} {formatDate(user && user.lastLogin ? user.lastLogin : null)}
                                 </p>
                             </div>
                             <div className="mt-4">
@@ -321,7 +332,7 @@ export function ProfilePage({ setPage, language, setLanguage, user, setUser, sho
                     setPendingCurrency(null)
                 }}
                 onConfirm={handleCurrencyChange}
-                oldCurrency={utilService.loadFromStorage('userCurrency') || 'GEL'}
+                oldCurrency={user && user.name ? userDataService.getUserCurrency(user.name) : 'GEL'}
                 newCurrency={pendingCurrency}
                 language={language}
             />

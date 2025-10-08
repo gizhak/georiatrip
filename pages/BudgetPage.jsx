@@ -4,6 +4,7 @@ const { useState, useEffect } = React
 import { translationService } from '../services/translation.service.js'
 import { expenseService } from '../services/expense.service.js'
 import { utilService } from '../services/util.service.js'
+import { userDataService } from '../services/user-data.service.js'
 import { BudgetStats } from '../cmps/budget/BudgetStats.jsx'
 import { ExpenseChart } from '../cmps/budget/ExpenseChart.jsx'
 import { ExpenseForm } from '../cmps/budget/ExpenseForm.jsx'
@@ -16,53 +17,60 @@ export function BudgetPage({ setPage, language, setLanguage, user, setUser, show
     const [showManageParticipants, setShowManageParticipants] = useState(false)
     const [editingExpense, setEditingExpense] = useState(null)
 
-    const [budget, setBudget] = useState(() => {
-        return utilService.loadFromStorage('budget') || 0
-    })
-
-    const [currency, setCurrency] = useState(() => {
-        return utilService.loadFromStorage('userCurrency') || 'GEL'
-    })
-
-    const [expenses, setExpenses] = useState(() => {
-        return utilService.loadFromStorage('expenses') || []
-    })
-
-    const [participants, setParticipants] = useState(() => {
-        return utilService.loadFromStorage('participants') || ['Guy Izhak', 'Alice', 'Bob', 'Charlie', 'Dana']
-    })
+    const [budget, setBudget] = useState(0)
+    const [currency, setCurrency] = useState('GEL')
+    const [expenses, setExpenses] = useState([])
+    const [participants, setParticipants] = useState([])
     const [newParticipant, setNewParticipant] = useState('')
+
+    // ✅ טעינת נתונים ספציפיים למשתמש
+    useEffect(() => {
+        if (user && user.name) {
+            const userData = userDataService.getUserData(user.name)
+            setBudget(userData.budget)
+            setCurrency(userData.currency)
+            setExpenses(userData.expenses)
+            setParticipants(userData.participants)
+        }
+    }, [user])
 
     const [newExpense, setNewExpense] = useState({
         description: '',
         amount: '',
-        paidBy: '',
+        paidBy: user && user.name ? user.name : '',
         category: 'Food',
         splitWith: [],
         paidWithCard: false,
         date: new Date().toISOString().split('T')[0]
     })
 
-    // שמור אוטומטית כל שינוי ב-localStorage
+    // ✅ שמירת הוצאות ספציפית למשתמש
     useEffect(() => {
-        utilService.saveToStorage('expenses', expenses)
-    }, [expenses])
-
-    useEffect(() => {
-        utilService.saveToStorage('budget', budget)
-    }, [budget])
-
-    useEffect(() => {
-        utilService.saveToStorage('participants', participants)
-    }, [participants])
-
-    // עדכן מטבע אם השתנה בפרופיל
-    useEffect(() => {
-        const savedCurrency = utilService.loadFromStorage('userCurrency')
-        if (savedCurrency && savedCurrency !== currency) {
-            setCurrency(savedCurrency)
+        if (user && user.name) {
+            userDataService.saveUserExpenses(user.name, expenses)
         }
-    }, [])
+    }, [expenses, user])
+
+    // ✅ שמירת תקציב ספציפי למשתמש
+    useEffect(() => {
+        if (user && user.name) {
+            userDataService.saveUserBudget(user.name, budget)
+        }
+    }, [budget, user])
+
+    // ✅ שמירת משתתפים ספציפית למשתמש
+    useEffect(() => {
+        if (user && user.name) {
+            userDataService.saveUserParticipants(user.name, participants)
+        }
+    }, [participants, user])
+
+    // ✅ שמירת מטבע ספציפי למשתמש
+    useEffect(() => {
+        if (user && user.name) {
+            userDataService.saveUserCurrency(user.name, currency)
+        }
+    }, [currency, user])
 
     // תרגומים
     const t = translationService.getTranslations('budget', language)
@@ -114,7 +122,7 @@ export function BudgetPage({ setPage, language, setLanguage, user, setUser, show
         setNewExpense({
             description: '',
             amount: '',
-            paidBy: '',
+            paidBy: user && user.name ? user.name : '',
             category: 'Food',
             splitWith: [],
             paidWithCard: false,
@@ -168,7 +176,7 @@ export function BudgetPage({ setPage, language, setLanguage, user, setUser, show
     }
 
     const removeParticipant = (name) => {
-        if (name === 'Guy Izhak') {
+        if (name === user.name) {
             showToast(t.cannotRemoveYourself, 'warning', 3000)
             return
         }
@@ -182,7 +190,7 @@ export function BudgetPage({ setPage, language, setLanguage, user, setUser, show
 
     return (
         <div className="min-h-screen" style={{ backgroundColor: 'var(--clr-bg-cream)' }} dir={isRTL ? 'rtl' : 'ltr'}>
-            {/* Header - ללא כפתור משתמש (כי זה ב-Header הגלובלי) */}
+            {/* Header */}
             <div className="py-12" style={{ backgroundColor: 'var(--clr-bg-dark)', paddingTop: '7rem' }}>
                 <div className="max-w-7xl mx-auto px-4 text-white">
                     <h2 className="text-4xl font-bold mb-2" style={{ fontFamily: 'var(--font-heading)', marginBottom: '20px' }}>
@@ -399,8 +407,8 @@ export function BudgetPage({ setPage, language, setLanguage, user, setUser, show
                         <div className="space-y-2">
                             {participants.map(person => (
                                 <div key={person} className="flex justify-between items-center p-3 border rounded">
-                                    <span>{person} {person === 'Guy Izhak' && t.you}</span>
-                                    {person !== 'Guy Izhak' && (
+                                    <span>{person} {person === user.name && t.you}</span>
+                                    {person !== user.name && (
                                         <button
                                             onClick={() => removeParticipant(person)}
                                             className="text-red-600 hover:text-red-800"
